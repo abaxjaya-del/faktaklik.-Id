@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaktaKlik - Pusat Klarifikasi Informasi</title>
+    <!-- Tailwind CSS untuk Desain Premium -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col">
+
+    <!-- NAVIGASI -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="text-xl font-black tracking-wider text-indigo-400 flex items-center gap-2">
+                <span class="bg-indigo-600 text-white px-2 py-1 rounded text-sm">✓</span> FAKTAKLIK
+            </div>
+            <nav class="hidden md:flex space-x-6 text-sm font-medium text-slate-400">
+                <a href="#" class="text-indigo-400 hover:text-indigo-300">Beranda</a>
+                <a href="#" class="hover:text-white transition">Kategori</a>
+                <a href="#" class="hover:text-white transition">Tentang Kami</a>
+            </nav>
+            <!-- Tombol Laporan Anonim -->
+            <button onclick="bukaFormulir()" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 px-4 py-2 rounded-full text-xs font-semibold transition cursor-pointer">
+                🚨 Laporkan Hoaks
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- PUSAT PENCARIAN (HERO SECTION) -->
+        <section class="max-w-4xl mx-auto px-4 py-16 md:py-24 text-center">
+            <h1 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4">
+                Saring Sebelum Sharing.
+            </h1>
+            <p class="text-slate-400 text-base md:text-lg max-w-2xl mx-auto mb-8">
+                Cari tahu kebenaran informasi, berita, atau rumor yang Anda terima di media sosial secara instan dan otomatis.
+            </p>
+
+            <!-- KOLOM PENCARIAN PREMIUM -->
+            <div class="bg-slate-800 p-2 rounded-2xl border border-slate-700 shadow-2xl max-w-2xl mx-auto flex flex-col sm:flex-row gap-2">
+                <div class="flex items-center gap-3 px-3 flex-grow text-slate-400">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <input type="text" placeholder="Tempel link medsos (FB/TikTok/WA) atau ketik klaim berita..." class="bg-transparent w-full text-white placeholder-slate-500 focus:outline-none text-sm md:text-base py-2">
+                </div>
+                <button class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-6 py-3 rounded-xl transition text-sm flex items-center justify-center gap-1">
+                    Cek Fakta
+                </button>
+            </div>
+
+            <!-- INDIKATOR MEDIA SOSIAL -->
+            <div class="flex justify-center items-center gap-4 mt-4 text-xs text-slate-500">
+                <span>Mendukung deteksi tautan:</span>
+                <span class="bg-slate-800 px-2 py-1 rounded">WhatsApp</span>
+                <span class="bg-slate-800 px-2 py-1 rounded">TikTok</span>
+                <span class="bg-slate-800 px-2 py-1 rounded">Facebook</span>
+                <span class="bg-slate-800 px-2 py-1 rounded">X</span>
+            </div>
+        </section>
+
+        <!-- KATEGORI DAN FILTER -->
+        <section class="max-w-6xl mx-auto px-4 mb-6 flex flex-wrap gap-2 justify-center">
+            <button class="bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-full">Semua</button>
+            <button class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold px-4 py-2 rounded-full transition">🩺 Kesehatan</button>
+            <button class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold px-4 py-2 rounded-full transition">⚖️ Politik</button>
+            <button class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold px-4 py-2 rounded-full transition">📱 Teknologi</button>
+        </section>
+
+        <!-- DAFTAR UTAMA BERITA (OTOMATIS) -->
+        <section class="max-w-6xl mx-auto px-4 py-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-white tracking-tight">Klarifikasi Terbaru</h2>
+                <span class="text-xs text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full font-medium flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> Update Otomatis
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- KARTU HOAKS -->
+                <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden hover:border-slate-600 transition flex flex-col">
+                    <div class="p-5 flex-grow">
+                        <div class="mb-3">
+                            <span class="bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] font-extrabold px-2.5 py-1 rounded-md tracking-wider uppercase">🔴 HOAKS</span>
+                        </div>
+                        <h3 class="font-bold text-white text-base leading-snug mb-2 hover:text-indigo-400 transition cursor-pointer">
+                            [HOAKS] Akun WhatsApp Resmi Bank X Menawarkan Hadiah Mobil Tanpa Undian
+                        </h3>
+                        <p class="text-slate-400 text-xs line-clamp-2">
+                            Beredar pesan berantai berisi tautan pendaftaran hadiah dalam rangka ulang tahun bank. Setelah diperiksa, link tersebut murni penipuan phishing.
+                        </p>
+                    </div>
+                    <div class="p-4 bg-slate-850 border-t border-slate-700/50 flex justify-between items-center text-[11px] text-slate-500">
+                        <span>Sumber: TurnBackHoax</span>
+                        <span>2 Jam lalu</span>
+                    </div>
+                </div>
+
+                <!-- KARTU FAKTA -->
+                <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden hover:border-slate-600 transition flex flex-col">
+                    <div class="p-5 flex-grow">
+                        <div class="mb-3">
+                            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-extrabold px-2.5 py-1 rounded-md tracking-wider uppercase">🟢 FAKTA</span>
+                        </div>
+                        <h3 class="font-bold text-white text-base leading-snug mb-2 hover:text-indigo-400 transition cursor-pointer">
+                            [FAKTA] BMKG Konfirmasi Suhu Dingin di Malam Hari Merupakan Fenomena Aphelion
+                        </h3>
+                        <p class="text-slate-400 text-xs line-clamp-2">
+                            Masyarakat mengira penurunan suhu drastis adalah tanda bencana. BMKG menjelaskan ini adalah siklus alami musim kemarau.
+                        </p>
+                    </div>
+                    <div class="p-4 bg-slate-850 border-t border-slate-700/50 flex justify-between items-center text-[11px] text-slate-500">
+                        <span>Sumber: Kompas Cek Fakta</span>
+                        <span>5 Jam lalu</span>
+                    </div>
+                </div>
+
+                <!-- KARTU SALAH KONTEKS -->
+                <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden hover:border-slate-600 transition flex flex-col">
+                    <div class="p-5 flex-grow">
+                        <div class="mb-3">
+                            <span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-extrabold px-2.5 py-1 rounded-md tracking-wider uppercase">🟡 SALAH KONTEKS</span>
+                        </div>
+                        <h3 class="font-bold text-white text-base leading-snug mb-2 hover:text-indigo-400 transition cursor-pointer">
+                            [KONTEKS KELIRU] Video Jembatan Ambruk Akibat Banjir di Kota Y pada Juli 2026
+                        </h3>
+                        <p class="text-slate-400 text-xs line-clamp-2">
+                            Video tersebut asli, namun peristiwa tersebut terjadi di luar negeri pada tahun 2021, bukan kejadian baru di Indonesia.
+                        </p>
+                    </div>
+                    <div class="p-4 bg-slate-850 border-t border-slate-700/50 flex justify-between items-center text-[11px] text-slate-500">
+                        <span>Sumber: Liputan6</span>
+                        <span>1 Hari lalu</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL FORMULIR LAPORAN (OPSI B) -->
+    <div id="modalLaporan" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-slate-800 border border-slate-700 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden p-6 relative">
+            <button onclick="tutupFormulir()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold cursor-pointer">&times;</button>
+            
+            <h3 class="text-lg font-bold text-white mb-1 flex items-center gap-2">🚨 Laporkan Temuan Hoaks</h3>
+            <p class="text-xs text-slate-400 mb-4">Laporan Anda bersifat anonim (identitas Anda aman).</p>
+            
+            <form onsubmit="kirimLaporan(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Sumber Informasi</label>
+                    <select class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                        <option>Grup WhatsApp</option>
+                        <option>TikTok</option>
+                        <option>Facebook</option>
+                        <option>X / Twitter</option>
+                        <option>Lainnya</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Narasi / Rumor Berita</label>
+                    <textarea rows="3" placeholder="Salin teks berita atau jelaskan rumor di sini..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500" required></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">Unggah Bukti Gambar / Screenshot</label>
+                    <input type="file" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600/10 file:text-indigo-400 hover:file:bg-indigo-600/20 file:cursor-pointer">
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl transition text-sm cursor-pointer mt-2">
+                    Kirim Laporan
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- FOOTER TRANSPARANSI & KREDIT DEVELOPER -->
+    <footer class="bg-slate-950 border-t border-slate-800 text-slate-500 py-8 text-center text-xs">
+        <div class="max-w-6xl mx-auto px-4 space-y-3">
+            <p class="text-slate-400 font-semibold">FAKTAKLIK © 2026</p>
+            
+            <!-- KREDIT DEVELOPER UTAMA -->
+            <p class="text-slate-400 text-[11px]">
+                Dikembangkan dengan ⚡ oleh <span class="font-bold text-indigo-400 hover:text-indigo-300 transition underline decoration-indigo-500/50 cursor-pointer">MUJADIN HUSEN</span>
+            </p>
+            
+            <p class="max-w-xl mx-auto text-[11px] text-slate-600 leading-relaxed pt-2">
+                Data artikel dikumpulkan secara otomatis melalui sistem API yang terhubung dengan Google Fact Check Explorer dan lembaga pemeriksa fakta independen yang mematuhi kode etik jurnalistik internasional.
+            </p>
+        </div>
+    </footer>
+
+    <!-- INTERAKSI JAVASCRIPT SIMPEL -->
+    <script>
+        function bukaFormulir() {
+            const modal = document.getElementById('modalLaporan');
+            modal.style.display = 'flex';
+        }
+        function tutupFormulir() {
+            const modal = document.getElementById('modalLaporan');
+            modal.style.display = 'none';
+        }
+        function kirimLaporan(e) {
+            e.preventDefault();
+            alert('Terima kasih! Laporan anonim Anda berhasil dikirim ke database admin.');
+            tutupFormulir();
+        }
+    </script>
+</body>
+</html>
