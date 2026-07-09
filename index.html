@@ -204,3 +204,35 @@
     </script>
 </body>
 </html>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const inputFakta = document.querySelector('input[placeholder*="Tempel link"]') || document.querySelector('input');
+  const tombolCek = Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('Cek Fakta'));
+  
+  if (inputFakta && tombolCek) {
+    tombolCek.addEventListener('click', () => {
+      const kataKunci = inputFakta.value.toLowerCase().trim();
+      const semuaJudul = document.querySelectorAll('h3, h4');
+      
+      semuaJudul.forEach(judul => {
+        const kartu = judul.closest('.card, [class*="card"], [class*="bg-"]') || judul.parentElement;
+        if (kartu) {
+          const teksBerita = kartu.textContent.toLowerCase();
+          if (teksBerita.includes(kataKunci)) {
+            kartu.style.display = 'block';
+          } else {
+            kartu.style.display = 'none';
+          }
+        }
+      });
+    });
+    
+    inputFakta.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        tombolCek.click();
+      }
+    });
+  }
+});
+</script>
