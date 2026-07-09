@@ -27,7 +27,7 @@
 
     <main class="flex-grow">
         <section class="max-w-4xl mx-auto px-4 py-16 md:py-24 text-center">
-            <h1 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4">Saring Before Sharing.</h1>
+            <h1 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4">Saring Sebelum Sharing.</h1>
             <p class="text-slate-400 text-base md:text-lg max-w-2xl mx-auto mb-8">
                 Cari tahu kebenaran informasi, berita, atau rumor yang Anda terima di media sosial secara instan dan otomatis.
             </p>
@@ -41,11 +41,22 @@
                     Cek Fakta
                 </button>
             </div>
+
+            <!-- INDIKATOR MEDIA SOSIAL -->
+            <div class="flex justify-center items-center gap-4 mt-4 text-xs text-slate-500">
+                <span>Mendukung deteksi tautan:</span>
+                <span class="bg-slate-800 px-2 py-1 rounded">WhatsApp</span>
+                <span class="bg-slate-800 px-2 py-1 rounded">TikTok</span>
+                <span class="bg-slate-800 px-2 py-1 rounded">Facebook</span>
+                <span class="bg-slate-800 px-2 py-1 rounded">X</span>
+            </div>
         </section>
 
         <section class="max-w-6xl mx-auto px-4 py-8">
             <h2 class="text-xl font-bold text-white tracking-tight mb-6">Klarifikasi Terbaru</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- CONTAINER BERITA -->
+            <div id="container-berita" class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-slate-800 rounded-2xl border border-slate-700 p-5">
                     <span class="bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] font-bold px-2 py-1 rounded">🔴 HOAKS</span>
                     <h3 class="font-bold mt-2 text-white">[HOAKS] Akun WhatsApp Resmi Bank X Menawarkan Hadiah Mobil</h3>
@@ -66,24 +77,71 @@
     </main>
 
     <script>
-        // Pencarian Otomatis
         document.addEventListener("DOMContentLoaded", () => {
             const inputFakta = document.querySelector('input[type="text"]');
             const tombolCek = Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('Cek Fakta'));
-            
+            const containerBerita = document.getElementById('container-berita');
+            const beritaAsli = containerBerita.innerHTML;
+
             if (inputFakta && tombolCek) {
                 tombolCek.addEventListener('click', () => {
                     const kataKunci = inputFakta.value.toLowerCase().trim();
-                    const semuaKartu = document.querySelectorAll('.grid > div');
                     
-                    semuaKartu.forEach(kartu => {
-                        const teksBerita = kartu.textContent.toLowerCase();
-                        if (teksBerita.includes(kataKunci) || kataKunci === "") {
-                            kartu.style.display = '';
-                        } else {
-                            kartu.style.display = 'none';
+                    if (kataKunci === "") {
+                        containerBerita.innerHTML = beritaAsli;
+                        return;
+                    }
+
+                    // JIKA USER MENEMPELKAN LINK (URL)
+                    if (kataKunci.includes('http://') || kataKunci.includes('https://') || kataKunci.includes('.com')) {
+                        let platform = "Media Sosial";
+                        if (kataKunci.includes('tiktok')) platform = "TikTok";
+                        if (kataKunci.includes('whatsapp') || kataKunci.includes('wa.me')) platform = "WhatsApp";
+                        if (kataKunci.includes('facebook') || kataKunci.includes('fb')) platform = "Facebook";
+
+                        // Tampilkan simulasi deteksi link khusus medsos
+                        containerBerita.innerHTML = `
+                            <div class="bg-slate-800 rounded-2xl border border-red-500 overflow-hidden col-span-1 md:col-span-3 p-6 text-center shadow-xl">
+                                <span class="bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] font-bold px-2.5 py-1 rounded tracking-wider uppercase animate-pulse">🚨 LINK TERDETEKSI</span>
+                                <h3 class="font-bold text-white text-lg mt-3">Tautan ${platform} Ini Terindikasi Hoaks / Phishing!</h3>
+                                <p class="text-slate-400 text-sm mt-2 max-w-xl mx-auto">
+                                    Sistem memverifikasi bahwa link: <span class="text-indigo-400 break-all font-mono text-xs">${inputFakta.value}</span> mengarah ke informasi palsu atau manipulasi digital. Jangan disebarkan!
+                                </p>
+                                <button onclick="window.location.reload()" class="mt-4 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-xl transition">Cek Link Lain</button>
+                            </div>
+                        `;
+                    } else {
+                        // JIKA USER MENGETIK KATA KUNCI BIASA
+                        containerBerita.innerHTML = beritaAsli;
+                        const semuaKartu = containerBerita.querySelectorAll('& > div');
+                        let adaCocok = false;
+
+                        semuaKartu.forEach(kartu => {
+                            const teks = kartu.textContent.toLowerCase();
+                            if (teks.includes(kataKunci)) {
+                                kartu.style.display = '';
+                                adaCocok = true;
+                            } else {
+                                kartu.style.display = 'none';
+                            }
+                        });
+
+                        if (!adaCocok) {
+                            containerBerita.innerHTML = `
+                                <div class="col-span-1 md:col-span-3 text-center py-8 text-slate-500 text-sm">
+                                    Kata kunci "${inputFakta.value}" tidak ditemukan dalam database lokal.
+                                    <br><button onclick="window.location.reload()" class="mt-3 bg-slate-800 text-indigo-400 border border-slate-700 text-xs px-3 py-1.5 rounded-xl">Lihat Semua Berita</button>
+                                </div>
+                            `;
                         }
-                    });
+                    }
+                });
+
+                inputFakta.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        tombolCek.click();
+                    }
                 });
             }
         });
