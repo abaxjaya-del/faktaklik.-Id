@@ -6,11 +6,9 @@
     <title>FaktaKlik - Multi-Source Fact Checking Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Desain Premium Glassmorphism & Aura Glow */
         .glass-card { background: rgba(30, 41, 59, 0.45); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
         .glow-text { background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #6366f1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .glow-bg { position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(99, 102, 241, 0.06) 0%, rgba(0,0,0,0) 60%); z-index: -1; }
-        /* Sembunyikan scrollbar bawaan untuk Carousel */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -18,7 +16,7 @@
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased">
     <div class="glow-bg"></div>
 
-    <!-- HEADER / NAVIGASI -->
+    <!-- HEADER -->
     <header class="py-6 border-b border-white/5 bg-slate-950/60 backdrop-blur sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
             <div class="text-2xl font-black tracking-tighter text-indigo-400">FAKTAKLIK</div>
@@ -37,7 +35,7 @@
                 Platform intelijen informasi independen. Memverifikasi klaim media sosial secara instan melalui jaringan konsorsium cek fakta terpercaya.
             </p>
 
-            <!-- KOTAK PENCARIAN PREMIUM -->
+            <!-- KOTAK PENCARIAN -->
             <div class="max-w-2xl mx-auto relative group mb-8">
                 <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl blur opacity-15 group-hover:opacity-35 transition duration-1000"></div>
                 <div class="relative bg-slate-900/90 rounded-2xl p-2 border border-slate-800 flex items-center shadow-2xl">
@@ -46,16 +44,13 @@
                 </div>
             </div>
 
-            <!-- ACC NOMOR 1: SOURCE BADGES CAROUSEL -->
+            <!-- CAROUSEL UTAMA -->
             <div class="max-w-2xl mx-auto">
-                <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold text-left mb-2 px-1">Jaringan Backing-an Data Konsorsium:</p>
-                <div class="flex gap-2 overflow-x-auto no-scrollbar pb-3 mask-gradient">
-                    <span class="bg-slate-900 border border-slate-800 text-slate-300 text-xs px-3.5 py-1.5 rounded-xl font-medium flex-shrink-0 shadow-sm">🌐 Tempo CekFakta</span>
-                    <span class="bg-slate-900 border border-slate-800 text-slate-300 text-xs px-3.5 py-1.5 rounded-xl font-medium flex-shrink-0 shadow-sm">🌐 AFP Indonesia</span>
-                    <span class="bg-slate-900 border border-slate-800 text-slate-300 text-xs px-3.5 py-1.5 rounded-xl font-medium flex-shrink-0 shadow-sm">🌐 Kompas Cek Fakta</span>
-                    <span class="bg-slate-900 border border-slate-800 text-slate-300 text-xs px-3.5 py-1.5 rounded-xl font-medium flex-shrink-0 shadow-sm">🌐 TurnBackHoax.id</span>
-                    <span class="bg-slate-900 border border-slate-800 text-slate-300 text-xs px-3.5 py-1.5 rounded-xl font-medium flex-shrink-0 shadow-sm">🌐 Antara News</span>
-                    <span class="bg-slate-900 border border-slate-800 text-slate-300 text-xs px-3.5 py-1.5 rounded-xl font-medium flex-shrink-0 shadow-sm">🌐 Tirto.id</span>
+                <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold text-left mb-2 px-1">Sumber Data Terintegrasi Saat Ini:</p>
+                <div class="flex gap-2 overflow-x-auto no-scrollbar pb-3">
+                    <span class="bg-slate-900 border border-slate-800 text-slate-300 text-xs px-3.5 py-1.5 rounded-xl font-medium flex-shrink-0 shadow-sm">🌐 TurnBackHoax.id (Live)</span>
+                    <span class="bg-slate-900/40 border border-slate-800/50 text-slate-600 text-xs px-3.5 py-1.5 rounded-xl font-medium flex-shrink-0 shadow-sm">🔒 Tempo CekFakta (In-Development)</span>
+                    <span class="bg-slate-900/40 border border-slate-800/50 text-slate-600 text-xs px-3.5 py-1.5 rounded-xl font-medium flex-shrink-0 shadow-sm">🔒 Kompas Cek Fakta (In-Development)</span>
                 </div>
             </div>
         </section>
@@ -68,7 +63,6 @@
             </div>
 
             <div id="news-container" class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-                <!-- Status Awal diisi oleh JavaScript -->
                 <div class="col-span-1 md:col-span-3 text-center py-12 text-slate-500 text-sm">
                     Mengamankan jalur data multi-konsorsium...
                 </div>
@@ -76,14 +70,12 @@
         </section>
     </main>
 
-    <!-- FOOTER (ACC PERSONAL BRANDING) -->
+    <!-- FOOTER -->
     <footer class="border-t border-white/5 py-12 bg-slate-950">
         <div class="max-w-6xl mx-auto px-6 text-center">
             <p class="text-slate-600 text-xs mb-6">
                 Platform ini mengintegrasikan data terverifikasi untuk menciptakan ruang digital yang bersih dari manipulasi.
             </p>
-            
-            <!-- KOTAK SIGNATURE STRUKTURAL -->
             <div class="inline-block p-5 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800/80 shadow-xl max-w-sm w-full">
                 <p class="text-[9px] text-indigo-400 font-black uppercase tracking-widest mb-1">Arsitektur & Kepemilikan Sistem</p>
                 <p class="text-white font-extrabold text-lg tracking-tight">MUJADIN HUSEN</p>
@@ -94,27 +86,29 @@
         </div>
     </footer>
 
-    <!-- LOGIKA ARSITEKTUR MESIN AGREGATOR -->
+    <!-- SCRIPT SMART DETECTOR -->
     <script>
         const container = document.getElementById('news-container');
         const searchInput = document.getElementById('searchInput');
         
-        // Daftar backing-an media internasional & nasional untuk variasi sumber intelijen berita
-        const daftarSumber = [
-            "Tempo CekFakta", 
-            "AFP Indonesia", 
-            "Kompas Cek Fakta", 
-            "TurnBackHoax.id", 
-            "Antara News Network", 
-            "Tirto.id"
+        // Pipa data utama (Bisa ditambah url RSS lain di dalam array ini di kemudian hari)
+        const pipaRSS = [
+            'https://turnbackhoax.id/feed'
         ];
 
         async function ambilDataMultiSumber() {
             try {
-                // Menarik data live via RSS Feed Bridge
-                const response = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://turnbackhoax.id/feed');
-                const data = await response.json();
-                tampilkanBerita(data.items);
+                // Eksekusi penarikan data secara simultan
+                const requests = pipaRSS.map(url => fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`).then(res => res.json()));
+                const results = await Promise.all(requests);
+                
+                // Gabungkan semua data berita menjadi satu wadah besar
+                let semuaBerita = [];
+                results.forEach(res => {
+                    if (res.items) semuaBerita = semuaBerita.concat(res.items);
+                });
+
+                tampilkanBerita(semuaBerita);
             } catch (error) {
                 container.innerHTML = `
                     <div class="col-span-1 md:col-span-3 text-center text-red-400 text-sm p-4 bg-red-500/5 rounded-xl border border-red-500/10">
@@ -132,21 +126,27 @@
                 return;
             }
 
-            items.forEach((item, indeks) => {
+            items.forEach(item => {
                 const div = document.createElement('div');
-                // Menggunakan sistem penentuan sumber otomatis agar tampak kaya data (Multi-Source Aggregator)
-                const sumberData = daftarSumber[indeks % daftarSumber.length];
                 
+                // --- KUNCI JAWABAN: LOGIKA DETEKSI OTOMATIS ASAL WEBSITE ---
+                const objekUrl = new URL(item.link);
+                let namaDomain = objekUrl.hostname.replace('www.', ''); // Mengambil contoh: turnbackhoax.id
+                
+                // Merapikan tampilan nama domain agar enak dibaca manusia
+                if (namaDomain === 'turnbackhoax.id') {
+                    namaDomain = 'TurnBackHoax';
+                }
+
                 div.className = "glass-card rounded-3xl p-6 hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/5 flex flex-col justify-between group";
-                
-                // Membersihkan sisa tag kode html pada deskripsi
                 const deskripsiBersih = item.description.replace(/<[^>]*>/g, '').substring(0, 130) + '...';
                 
                 div.innerHTML = `
                     <div>
                         <div class="flex justify-between items-center mb-4">
                             <span class="bg-red-500/10 text-red-400 text-[9px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider">Klarifikasi</span>
-                            <span class="text-[10px] text-slate-500 font-semibold bg-slate-900 px-2 py-1 rounded-md border border-slate-800">${sumberData}</span>
+                            <!-- Label ini sekarang 100% Jujur sesuai deteksi link asal -->
+                            <span class="text-[10px] text-indigo-400 font-semibold bg-indigo-950/80 px-2.5 py-1 rounded-md border border-indigo-500/20 tracking-wide">${namaDomain}</span>
                         </div>
                         <h3 class="font-extrabold text-white text-base md:text-lg leading-snug mb-3 group-hover:text-indigo-300 transition duration-300">${item.title}</h3>
                         <p class="text-slate-400 text-xs md:text-sm leading-relaxed">${deskripsiBersih}</p>
@@ -162,7 +162,6 @@
             });
         }
 
-        // Fitur Filter Pencarian Otomatis Lokal
         searchInput.addEventListener('input', (e) => {
             const kataKunci = e.target.value.toLowerCase().trim();
             const semuaKartu = container.querySelectorAll('& > div');
@@ -173,7 +172,6 @@
             });
         });
 
-        // Jalankan Inisialisasi Sistem
         ambilDataMultiSumber();
     </script>
 </body>
