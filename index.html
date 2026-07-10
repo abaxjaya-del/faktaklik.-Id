@@ -1,202 +1,362 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FaktaKlik - Multi-Source Fact Checking Platform</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .glass-card { background: rgba(30, 41, 59, 0.45); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
-        .glow-text { background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #6366f1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .glow-bg { position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(99, 102, 241, 0.06) 0%, rgba(0,0,0,0) 60%); z-index: -1; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FaktaKlik — Berkas Pemeriksaan Fakta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EFE7D6;
+    --paper-card:#F6F0E3;
+    --paper-edge:#DED2B4;
+    --ink:#221D15;
+    --ink-soft:#5B5644;
+    --rule:rgba(34,29,21,0.18);
+    --red:#AE3427;
+    --green:#3C6E4A;
+    --amber:#A9791E;
+    --grey:#6B6553;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background-color:var(--paper);
+    background-image: radial-gradient(circle at 1px 1px, rgba(34,29,21,0.05) 1px, transparent 0);
+    background-size: 22px 22px;
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+  }
+  .mono{ font-family:'IBM Plex Mono',monospace; letter-spacing:0.04em; }
+
+  header.masthead{
+    border-bottom:3px solid var(--ink);
+    padding:18px 20px 14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+  }
+  .brand-tab{
+    display:inline-block;
+    background:var(--ink);
+    color:var(--paper-card);
+    padding:3px 10px;
+    font-size:10px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    margin-bottom:8px;
+  }
+  .brand-name{
+    font-family:'Fraunces',serif;
+    font-weight:900;
+    font-size:26px;
+    letter-spacing:-0.01em;
+  }
+  .status-live{
+    display:flex; align-items:center; gap:6px;
+    font-size:10px; text-transform:uppercase; letter-spacing:0.1em;
+    color:var(--ink-soft);
+  }
+  .dot{ width:7px;height:7px;border-radius:50%;background:var(--green); animation:pulse 1.8s infinite; }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(60,110,74,0.5);}
+    70%{box-shadow:0 0 0 7px rgba(60,110,74,0);}
+    100%{box-shadow:0 0 0 0 rgba(60,110,74,0);}
+  }
+
+  main{ max-width:900px; margin:0 auto; padding:0 20px; }
+
+  .hero{ padding:44px 0 28px; text-align:left; }
+  .hero h1{
+    font-family:'Fraunces',serif;
+    font-size:clamp(34px,7vw,58px);
+    line-height:1.02;
+    font-weight:900;
+    margin:0 0 14px;
+    max-width:11ch;
+  }
+  .hero h1 em{ font-style:italic; font-weight:600; color:var(--red); }
+  .hero p{
+    color:var(--ink-soft);
+    font-size:15px;
+    line-height:1.6;
+    max-width:52ch;
+    margin:0 0 26px;
+  }
+
+  .intake{
+    background:var(--paper-card);
+    border:1.5px solid var(--ink);
+    box-shadow:5px 5px 0 var(--paper-edge), 5px 5px 0 1.5px var(--ink);
+    padding:16px 18px 18px;
+    margin-bottom:8px;
+  }
+  .intake-label{
+    font-size:10px; text-transform:uppercase; color:var(--ink-soft);
+    margin-bottom:8px; display:flex; justify-content:space-between;
+  }
+  .intake input{
+    width:100%; border:none; border-bottom:1.5px solid var(--rule);
+    background:transparent; font-family:'Inter',sans-serif; font-size:16px;
+    padding:6px 2px 10px; color:var(--ink);
+  }
+  .intake input:focus{ outline:none; border-bottom-color:var(--ink); }
+  .intake input::placeholder{ color:#A79F87; }
+  .status-line{ font-size:11px; margin-top:10px; min-height:14px; color:var(--ink-soft); }
+  .status-line.active{ color:var(--red); }
+
+  .sources{ display:flex; gap:8px; flex-wrap:wrap; margin:22px 0 40px; }
+  .source-chip{
+    font-size:10px; padding:5px 10px; border:1px solid var(--rule);
+    text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-soft);
+  }
+  .source-chip.on{ border-color:var(--ink); color:var(--ink); background:var(--paper-card); }
+
+  .torn{
+    height:14px;
+    background-image: linear-gradient(135deg, var(--paper) 50%, transparent 50%),
+                       linear-gradient(-135deg, var(--paper) 50%, transparent 50%);
+    background-size: 16px 16px; background-position: bottom; background-repeat: repeat-x;
+    margin-bottom:6px;
+  }
+
+  .section-head{ display:flex; align-items:center; gap:12px; margin:0 0 22px; }
+  .section-head span{ font-size:11px; text-transform:uppercase; letter-spacing:0.12em; color:var(--ink-soft); white-space:nowrap; }
+  .section-head .line{ height:1px; background:var(--rule); flex-grow:1; }
+
+  #news-container{ display:grid; grid-template-columns:1fr; gap:18px; padding-bottom:70px; }
+  @media(min-width:720px){ #news-container{ grid-template-columns:1fr 1fr; } }
+
+  .card{ position:relative; background:var(--paper-card); border:1px solid var(--ink); padding:20px 18px 18px; }
+  .stamp{
+    position:absolute; top:-10px; right:14px; transform:rotate(-6deg);
+    border:2px solid var(--grey); color:var(--grey);
+    font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:10.5px; letter-spacing:0.08em;
+    padding:3px 8px; background:var(--paper-card); text-transform:uppercase;
+  }
+  .stamp.hoax{ border-color:var(--red); color:var(--red); }
+  .stamp.benar{ border-color:var(--green); color:var(--green); }
+  .stamp.periksa{ border-color:var(--amber); color:var(--amber); }
+  .stamp.netral{ border-color:var(--grey); color:var(--grey); }
+
+  .card .meta{ font-size:10px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px; }
+  .card .meta .src{ font-weight:600; color:var(--ink); }
+  .card h3{ font-family:'Fraunces',serif; font-weight:700; font-size:18px; line-height:1.3; margin:0 0 10px; }
+  .card p{ font-size:13px; color:var(--ink-soft); line-height:1.55; margin:0 0 16px; }
+  .card .foot{ display:flex; justify-content:space-between; align-items:center; border-top:1px dashed var(--rule); padding-top:12px; }
+  .card .foot a{
+    font-size:11px; text-transform:uppercase; letter-spacing:0.06em;
+    color:var(--ink); text-decoration:none; border:1px solid var(--ink); padding:6px 12px; transition:.15s;
+  }
+  .card .foot a:hover{ background:var(--ink); color:var(--paper-card); }
+
+  .empty{ grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--ink-soft); font-size:14px; }
+
+  footer{ border-top:3px solid var(--ink); padding:36px 20px; }
+  .colophon{ max-width:340px; margin:0 auto; text-align:center; border:1px solid var(--ink); padding:18px; background:var(--paper-card); }
+  .colophon .eyebrow{ font-size:9px; letter-spacing:0.14em; text-transform:uppercase; color:var(--red); margin-bottom:6px; }
+  .colophon .name{ font-family:'Fraunces',serif; font-weight:800; font-size:17px; }
+  .colophon .role{ font-size:11px; color:var(--ink-soft); margin-top:2px; }
+  .colophon .copy{ font-size:9px; color:var(--ink-soft); margin-top:12px; border-top:1px solid var(--rule); padding-top:10px; }
+</style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased">
-    <div class="glow-bg"></div>
+<body>
 
-    <header class="py-6 border-b border-white/5 bg-slate-950/60 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
-            <div class="text-2xl font-black tracking-tighter text-indigo-400">FAKTAKLIK</div>
-            <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                <span class="text-[10px] text-slate-400 font-bold tracking-widest uppercase">Multi-Source Live</span>
-            </div>
-        </div>
-    </header>
+<header class="masthead">
+  <div>
+    <span class="brand-tab mono">Berkas Digital No. 26613</span><br>
+    <span class="brand-name">FAKTAKLIK</span>
+  </div>
+  <div class="status-live"><span class="dot"></span>Live</div>
+</header>
 
-    <main class="flex-grow">
-        <section class="max-w-4xl mx-auto px-6 py-16 md:py-24 text-center relative">
-            <h1 class="text-4xl md:text-7xl font-extrabold mb-6 glow-text tracking-tight pb-2">Saring Sebelum Sharing.</h1>
-            <p class="text-slate-400 text-base md:text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
-                Platform intelijen informasi independen. Memverifikasi klaim media sosial secara instan melalui jaringan konsorsium cek fakta global.
-            </p>
+<main>
+  <section class="hero">
+    <h1>Saring<br><em>sebelum</em> sharing.</h1>
+    <p>Sebelum kamu percaya video atau postingan yang lagi viral, cek dulu di sini. FaktaKlik menelusuri jaringan pemeriksa fakta untuk mengonfirmasi apakah klaim itu benar, salah, atau masih perlu dicermati.</p>
 
-            <div class="max-w-2xl mx-auto relative group mb-8">
-                <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl blur opacity-15 group-hover:opacity-35 transition duration-1000"></div>
-                <div class="relative bg-slate-900/90 rounded-2xl p-2 border border-slate-800 flex items-center shadow-2xl">
-                    <svg class="w-6 h-6 text-slate-500 ml-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    <input id="searchInput" type="text" placeholder="Ketik kata kunci untuk memeriksa hoaks..." class="bg-transparent w-full px-4 py-3 text-white focus:outline-none placeholder-slate-600 text-sm md:text-base">
-                </div>
-            </div>
+    <div class="intake">
+      <div class="intake-label mono">
+        <span>Ajukan Pemeriksaan</span>
+        <span id="charCount">0</span>
+      </div>
+      <input id="searchInput" type="text" placeholder="Tempel link TikTok, atau ketik topik/kata kunci...">
+      <div id="statusLine" class="status-line mono"></div>
+    </div>
 
-            <div class="max-w-2xl mx-auto">
-                <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold text-left mb-2 px-1">Sumber Data Terintegrasi Saat Ini:</p>
-                <div class="flex gap-2 overflow-x-auto no-scrollbar pb-3">
-                    <span class="bg-slate-900 border border-slate-800 text-slate-300 text-xs px-3.5 py-1.5 rounded-xl font-medium flex-shrink-0 shadow-sm">🌐 Google Fact Check (Live)</span>
-                    <span class="bg-slate-900 border border-slate-800 text-slate-300 text-xs px-3.5 py-1.5 rounded-xl font-medium flex-shrink-0 shadow-sm">🌐 TurnBackHoax.id (Live)</span>
-                    <span class="bg-slate-900/40 border border-slate-800/50 text-slate-600 text-xs px-3.5 py-1.5 rounded-xl font-medium flex-shrink-0 shadow-sm">🔒 Tempo CekFakta (In-Development)</span>
-                    <span class="bg-slate-900/40 border border-slate-800/50 text-slate-600 text-xs px-3.5 py-1.5 rounded-xl font-medium flex-shrink-0 shadow-sm">🔒 Kompas Cek Fakta (In-Development)</span>
-                </div>
-            </div>
-        </section>
+    <div class="sources">
+      <span class="source-chip on">● Google Fact Check</span>
+      <span class="source-chip on">● TurnBackHoax.id</span>
+      <span class="source-chip on">● Deteksi Tautan TikTok</span>
+      <span class="source-chip">○ Tempo Cek Fakta — segera</span>
+      <span class="source-chip">○ Kompas Cek Fakta — segera</span>
+    </div>
+  </section>
 
-        <section class="max-w-6xl mx-auto px-6 pb-24">
-            <div class="flex items-center gap-4 mb-10">
-                <span id="section-label" class="text-indigo-400 text-xs font-bold uppercase tracking-widest flex-shrink-0">Klarifikasi Multi-Sumber Terkini</span>
-                <div class="h-px bg-gradient-to-r from-slate-800 to-transparent flex-grow"></div>
-            </div>
+  <div class="torn"></div>
 
-            <div id="news-container" class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-                <div class="col-span-1 md:col-span-3 text-center py-12 text-slate-500 text-sm">
-                    Mengamankan jalur data multi-konsorsium...
-                </div>
-            </div>
-        </section>
-    </main>
+  <section>
+    <div class="section-head">
+      <span id="section-label" class="mono">Klarifikasi Terkini</span>
+      <div class="line"></div>
+    </div>
 
-    <footer class="border-t border-white/5 py-12 bg-slate-950">
-        <div class="max-w-6xl mx-auto px-6 text-center">
-            <p class="text-slate-600 text-xs mb-6">
-                Platform ini mengintegrasikan data terverifikasi untuk menciptakan ruang digital yang bersih dari manipulasi.
-            </p>
-            <div class="inline-block p-5 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800/80 shadow-xl max-w-sm w-full">
-                <p class="text-[9px] text-indigo-400 font-black uppercase tracking-widest mb-1">Arsitektur & Kepemilikan Sistem</p>
-                <p class="text-white font-extrabold text-lg tracking-tight">MUJADIN HUSEN</p>
-                <p class="text-[10px] text-slate-400 font-medium mt-0.5">Founder & Lead System Architect</p>
-                <div class="h-px bg-slate-800/60 my-3"></div>
-                <p class="text-[9px] text-slate-600">© 2026 FaktaKlik Systems. All Rights Reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <div id="news-container">
+      <div class="empty">Mengamankan jalur data multi-konsorsium...</div>
+    </div>
+  </section>
+</main>
 
-    <script>
-        const container = document.getElementById('news-container');
-        const searchInput = document.getElementById('searchInput');
-        const sectionLabel = document.getElementById('section-label');
+<footer>
+  <div class="colophon">
+    <p class="eyebrow">Arsitektur &amp; Kepemilikan Sistem</p>
+    <p class="name">MUJADIN HUSEN</p>
+    <p class="role">Founder &amp; Lead System Architect</p>
+    <p class="copy mono">© 2026 FAKTAKLIK SYSTEMS — ALL RIGHTS RESERVED</p>
+  </div>
+</footer>
 
-        const GOOGLE_API_KEY = 'AIzaSyAeywODxfVoifRq23yihVLV7Vp7P2w415E';
-        const pipaRSS = [
-            'https://turnbackhoax.id/feed'
-        ];
+<script>
+const container = document.getElementById('news-container');
+const searchInput = document.getElementById('searchInput');
+const sectionLabel = document.getElementById('section-label');
+const statusLine = document.getElementById('statusLine');
+const charCount = document.getElementById('charCount');
 
-        let debounceTimer;
+const GOOGLE_API_KEY = 'AIzaSyAeywODxfVoifRq23yihVLV7Vp7P2w415E';
+const pipaRSS = ['https://turnbackhoax.id/feed'];
+let debounceTimer;
 
-        async function ambilDataRSS() {
-            try {
-                const requests = pipaRSS.map(url => fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`).then(res => res.json()));
-                const results = await Promise.all(requests);
-                let semuaBerita = [];
-                results.forEach(res => {
-                    if (res.items) semuaBerita = semuaBerita.concat(res.items);
-                });
-                return semuaBerita.map(item => {
-                    const objekUrl = new URL(item.link);
-                    let namaDomain = objekUrl.hostname.replace('www.', '');
-                    if (namaDomain === 'turnbackhoax.id') namaDomain = 'TurnBackHoax';
-                    return {
-                        judul: item.title,
-                        deskripsi: item.description.replace(/<[^>]*>/g, '').substring(0, 130) + '...',
-                        sumber: namaDomain,
-                        link: item.link
-                    };
-                });
-            } catch (error) {
-                console.error('Gagal ambil RSS:', error);
-                return [];
-            }
-        }
+// ==== Deteksi Link TikTok ====
+function isTikTokLink(text){
+  return /tiktok\.com/i.test(text.trim());
+}
 
-        async function ambilDataFactCheck(query) {
-            try {
-                const kataKunci = query && query.trim().length > 0 ? query.trim() : 'berita';
-                const url = `https://factchecktools.googleapis.com/v1alpha1/claims:search?query=${encodeURIComponent(kataKunci)}&languageCode=id&pageSize=15&key=${GOOGLE_API_KEY}`;
-                const res = await fetch(url);
-                const data = await res.json();
+async function ambilJudulTikTok(link){
+  try{
+    statusLine.textContent = 'Membaca tautan TikTok...';
+    statusLine.classList.add('active');
+    const res = await fetch(`https://www.tiktok.com/oembed?url=${encodeURIComponent(link.trim())}`);
+    if(!res.ok) throw new Error('oEmbed gagal');
+    const data = await res.json();
+    statusLine.textContent = `Terbaca: "${data.title}" — oleh ${data.author_name || 'akun tidak diketahui'}`;
+    return data.title || '';
+  }catch(err){
+    statusLine.textContent = 'Tautan ini tidak bisa dibaca otomatis. Coba salin judul/caption videonya secara manual.';
+    return '';
+  }
+}
 
-                if (!data.claims) return [];
+// ==== Sumber 1: RSS TurnBackHoax ====
+async function ambilDataRSS(){
+  try{
+    const requests = pipaRSS.map(url => fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`).then(r=>r.json()));
+    const results = await Promise.all(requests);
+    let semua = [];
+    results.forEach(res=>{ if(res.items) semua = semua.concat(res.items); });
+    return semua.map(item=>{
+      const domain = new URL(item.link).hostname.replace('www.','');
+      return {
+        judul:item.title,
+        deskripsi:item.description.replace(/<[^>]*>/g,'').substring(0,130)+'...',
+        sumber: domain==='turnbackhoax.id' ? 'TurnBackHoax' : domain,
+        link:item.link,
+        rating:'hoax'
+      };
+    });
+  }catch(e){ console.error('RSS error', e); return []; }
+}
 
-                return data.claims.map(claim => {
-                    const review = (claim.claimReview && claim.claimReview[0]) || {};
-                    let namaDomain = review.publisher && review.publisher.name ? review.publisher.name : 'Fact Check';
-                    return {
-                        judul: claim.text || review.title || 'Klaim tanpa judul',
-                        deskripsi: (review.textualRating ? `Rating: ${review.textualRating}. ` : '') + (claim.claimant ? `Klaim oleh: ${claim.claimant}.` : ''),
-                        sumber: namaDomain,
-                        link: review.url || '#'
-                    };
-                });
-            } catch (error) {
-                console.error('Gagal ambil Fact Check API:', error);
-                return [];
-            }
-        }
+// ==== Sumber 2: Google Fact Check Tools API ====
+function klasifikasiRating(teks){
+  const t = (teks||'').toLowerCase();
+  if(/hoax|hoaks|false|salah|keliru|palsu|fabricated|bohong/.test(t)) return 'hoax';
+  if(/true|benar|fakta|akurat|correct/.test(t)) return 'benar';
+  if(/misleading|sebagian|partly|partial|menyesatkan|perlu konteks/.test(t)) return 'periksa';
+  return 'netral';
+}
 
-        async function muatSemuaData(query) {
-            container.innerHTML = `<div class="col-span-1 md:col-span-3 text-center py-12 text-slate-500 text-sm">Mencari di seluruh jaringan konsorsium...</div>`;
+async function ambilDataFactCheck(query){
+  try{
+    const kataKunci = query && query.trim().length>0 ? query.trim() : 'berita';
+    const url = `https://factchecktools.googleapis.com/v1alpha1/claims:search?query=${encodeURIComponent(kataKunci)}&languageCode=id&pageSize=15&key=${GOOGLE_API_KEY}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if(!data.claims) return [];
+    return data.claims.map(claim=>{
+      const review = (claim.claimReview && claim.claimReview[0]) || {};
+      const namaSumber = (review.publisher && review.publisher.name) ? review.publisher.name : 'Fact Check';
+      return {
+        judul: claim.text || review.title || 'Klaim tanpa judul',
+        deskripsi: (claim.claimant ? `Klaim oleh: ${claim.claimant}. ` : '') + (review.textualRating ? `Penilaian: ${review.textualRating}.` : ''),
+        sumber: namaSumber,
+        link: review.url || '#',
+        rating: klasifikasiRating(review.textualRating)
+      };
+    });
+  }catch(e){ console.error('Fact Check API error', e); return []; }
+}
 
-            const [dataRSS, dataFactCheck] = await Promise.all([
-                query ? [] : ambilDataRSS(),
-                ambilDataFactCheck(query)
-            ]);
+async function muatSemuaData(rawInput){
+  container.innerHTML = `<div class="empty">Menelusuri seluruh jaringan konsorsium...</div>`;
 
-            const gabungan = [...dataFactCheck, ...dataRSS];
-            sectionLabel.textContent = query ? `Hasil Pencarian: "${query}"` : 'Klarifikasi Multi-Sumber Terkini';
-            tampilkanBerita(gabungan);
-        }
+  let query = rawInput;
+  if(rawInput && isTikTokLink(rawInput)){
+    query = await ambilJudulTikTok(rawInput);
+  } else {
+    statusLine.textContent = '';
+    statusLine.classList.remove('active');
+  }
 
-        function tampilkanBerita(items) {
-            container.innerHTML = '';
+  const [dataRSS, dataFC] = await Promise.all([
+    query ? [] : ambilDataRSS(),
+    ambilDataFactCheck(query)
+  ]);
 
-            if (!items || items.length === 0) {
-                container.innerHTML = '<div class="col-span-1 md:col-span-3 text-center text-slate-500 text-sm">Tidak ada hasil ditemukan. Coba kata kunci lain.</div>';
-                return;
-            }
+  const gabungan = [...dataFC, ...dataRSS];
+  sectionLabel.textContent = rawInput ? `Hasil Pencarian` : 'Klarifikasi Terkini';
+  tampilkanBerita(gabungan);
+}
 
-            items.forEach(item => {
-                const div = document.createElement('div');
-                div.className = "glass-card rounded-3xl p-6 hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/5 flex flex-col justify-between group";
+const stampLabel = { hoax:'HOAKS', benar:'TERVERIFIKASI', periksa:'PERLU DICERMATI', netral:'PERLU DIPERIKSA' };
 
-                div.innerHTML = `
-                    <div>
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="bg-red-500/10 text-red-400 text-[9px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider">Klarifikasi</span>
-                            <span class="text-[10px] text-indigo-400 font-semibold bg-indigo-950/80 px-2.5 py-1 rounded-md border border-indigo-500/20 tracking-wide">${item.sumber}</span>
-                        </div>
-                        <h3 class="font-extrabold text-white text-base md:text-lg leading-snug mb-3 group-hover:text-indigo-300 transition duration-300">${item.judul}</h3>
-                        <p class="text-slate-400 text-xs md:text-sm leading-relaxed">${item.deskripsi}</p>
-                    </div>
-                    <div class="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
-                        <span class="text-[10px] text-slate-500">Status: Validated</span>
-                        <a href="${item.link}" target="_blank" class="text-xs bg-indigo-600/10 text-indigo-400 border border-indigo-500/20 px-4 py-2 rounded-xl font-bold uppercase tracking-wider hover:bg-indigo-600 hover:text-white transition duration-300">
-                            Buka Bukti
-                        </a>
-                    </div>
-                `;
-                container.appendChild(div);
-            });
-        }
+function tampilkanBerita(items){
+  container.innerHTML = '';
+  if(!items || items.length===0){
+    container.innerHTML = '<div class="empty">Tidak ada berkas ditemukan. Coba kata kunci atau tautan lain.</div>';
+    return;
+  }
+  items.forEach(item=>{
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <div class="stamp ${item.rating}">${stampLabel[item.rating]}</div>
+      <div class="meta"><span class="src">${item.sumber}</span></div>
+      <h3>${item.judul}</h3>
+      <p>${item.deskripsi}</p>
+      <div class="foot">
+        <span class="mono" style="font-size:10px;color:var(--ink-soft);">Status: Divalidasi</span>
+        <a href="${item.link}" target="_blank">Buka Bukti →</a>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
 
-        searchInput.addEventListener('input', (e) => {
-            clearTimeout(debounceTimer);
-            const kataKunci = e.target.value;
-            debounceTimer = setTimeout(() => {
-                muatSemuaData(kataKunci);
-            }, 600);
-        });
+searchInput.addEventListener('input', (e)=>{
+  charCount.textContent = e.target.value.length;
+  clearTimeout(debounceTimer);
+  const val = e.target.value;
+  if(!isTikTokLink(val)){
+    statusLine.textContent = '';
+    statusLine.classList.remove('active');
+  }
+  debounceTimer = setTimeout(()=>{ muatSemuaData(val); }, 700);
+});
 
-        muatSemuaData('');
-    </script>
+muatSemuaData('');
+</script>
 </body>
 </html>
