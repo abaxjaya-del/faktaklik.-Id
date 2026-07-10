@@ -16,26 +16,23 @@
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased">
     <div class="glow-bg"></div>
 
-    <!-- HEADER -->
     <header class="py-6 border-b border-white/5 bg-slate-950/60 backdrop-blur sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
             <div class="text-2xl font-black tracking-tighter text-indigo-400">FAKTAKLIK</div>
             <div class="flex items-center gap-2">
                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                <span class="text-[10px] text-slate-400 font-bold tracking-widest uppercase">Multi-Network Live</span>
+                <span class="text-[10px] text-slate-400 font-bold tracking-widest uppercase">Multi-Source Live</span>
             </div>
         </div>
     </header>
 
-    <!-- HERO SECTION -->
     <main class="flex-grow">
         <section class="max-w-4xl mx-auto px-6 py-16 md:py-24 text-center relative">
             <h1 class="text-4xl md:text-7xl font-extrabold mb-6 glow-text tracking-tight pb-2">Saring Sebelum Sharing.</h1>
             <p class="text-slate-400 text-base md:text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
-                Platform intelijen informasi independen. Memverifikasi klaim media sosial secara instan melalui jaringan konsorsium cek fakta terpercaya.
+                Platform intelijen informasi independen. Memverifikasi klaim media sosial secara instan melalui jaringan konsorsium cek fakta global.
             </p>
 
-            <!-- KOTAK PENCARIAN -->
             <div class="max-w-2xl mx-auto relative group mb-8">
                 <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl blur opacity-15 group-hover:opacity-35 transition duration-1000"></div>
                 <div class="relative bg-slate-900/90 rounded-2xl p-2 border border-slate-800 flex items-center shadow-2xl">
@@ -44,10 +41,10 @@
                 </div>
             </div>
 
-            <!-- CAROUSEL UTAMA -->
             <div class="max-w-2xl mx-auto">
                 <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold text-left mb-2 px-1">Sumber Data Terintegrasi Saat Ini:</p>
                 <div class="flex gap-2 overflow-x-auto no-scrollbar pb-3">
+                    <span class="bg-slate-900 border border-slate-800 text-slate-300 text-xs px-3.5 py-1.5 rounded-xl font-medium flex-shrink-0 shadow-sm">🌐 Google Fact Check (Live)</span>
                     <span class="bg-slate-900 border border-slate-800 text-slate-300 text-xs px-3.5 py-1.5 rounded-xl font-medium flex-shrink-0 shadow-sm">🌐 TurnBackHoax.id (Live)</span>
                     <span class="bg-slate-900/40 border border-slate-800/50 text-slate-600 text-xs px-3.5 py-1.5 rounded-xl font-medium flex-shrink-0 shadow-sm">🔒 Tempo CekFakta (In-Development)</span>
                     <span class="bg-slate-900/40 border border-slate-800/50 text-slate-600 text-xs px-3.5 py-1.5 rounded-xl font-medium flex-shrink-0 shadow-sm">🔒 Kompas Cek Fakta (In-Development)</span>
@@ -55,10 +52,9 @@
             </div>
         </section>
 
-        <!-- CONTAINER BERITA -->
         <section class="max-w-6xl mx-auto px-6 pb-24">
             <div class="flex items-center gap-4 mb-10">
-                <span class="text-indigo-400 text-xs font-bold uppercase tracking-widest flex-shrink-0">Klarifikasi Multi-Sumber Terkini</span>
+                <span id="section-label" class="text-indigo-400 text-xs font-bold uppercase tracking-widest flex-shrink-0">Klarifikasi Multi-Sumber Terkini</span>
                 <div class="h-px bg-gradient-to-r from-slate-800 to-transparent flex-grow"></div>
             </div>
 
@@ -70,7 +66,6 @@
         </section>
     </main>
 
-    <!-- FOOTER -->
     <footer class="border-t border-white/5 py-12 bg-slate-950">
         <div class="max-w-6xl mx-auto px-6 text-center">
             <p class="text-slate-600 text-xs mb-6">
@@ -86,70 +81,101 @@
         </div>
     </footer>
 
-    <!-- SCRIPT SMART DETECTOR -->
     <script>
         const container = document.getElementById('news-container');
         const searchInput = document.getElementById('searchInput');
-        
-        // Pipa data utama (Bisa ditambah url RSS lain di dalam array ini di kemudian hari)
+        const sectionLabel = document.getElementById('section-label');
+
+        const GOOGLE_API_KEY = 'AIzaSyAeywODxfVoifRq23yihVLV7Vp7P2w415E';
         const pipaRSS = [
             'https://turnbackhoax.id/feed'
         ];
 
-        async function ambilDataMultiSumber() {
+        let debounceTimer;
+
+        async function ambilDataRSS() {
             try {
-                // Eksekusi penarikan data secara simultan
                 const requests = pipaRSS.map(url => fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`).then(res => res.json()));
                 const results = await Promise.all(requests);
-                
-                // Gabungkan semua data berita menjadi satu wadah besar
                 let semuaBerita = [];
                 results.forEach(res => {
                     if (res.items) semuaBerita = semuaBerita.concat(res.items);
                 });
-
-                tampilkanBerita(semuaBerita);
+                return semuaBerita.map(item => {
+                    const objekUrl = new URL(item.link);
+                    let namaDomain = objekUrl.hostname.replace('www.', '');
+                    if (namaDomain === 'turnbackhoax.id') namaDomain = 'TurnBackHoax';
+                    return {
+                        judul: item.title,
+                        deskripsi: item.description.replace(/<[^>]*>/g, '').substring(0, 130) + '...',
+                        sumber: namaDomain,
+                        link: item.link
+                    };
+                });
             } catch (error) {
-                container.innerHTML = `
-                    <div class="col-span-1 md:col-span-3 text-center text-red-400 text-sm p-4 bg-red-500/5 rounded-xl border border-red-500/10">
-                        Gagal mengunduh data dari kluster server. Silakan muat ulang halaman.
-                    </div>
-                `;
+                console.error('Gagal ambil RSS:', error);
+                return [];
             }
+        }
+
+        async function ambilDataFactCheck(query) {
+            try {
+                const kataKunci = query && query.trim().length > 0 ? query.trim() : 'berita';
+                const url = `https://factchecktools.googleapis.com/v1alpha1/claims:search?query=${encodeURIComponent(kataKunci)}&languageCode=id&pageSize=15&key=${GOOGLE_API_KEY}`;
+                const res = await fetch(url);
+                const data = await res.json();
+
+                if (!data.claims) return [];
+
+                return data.claims.map(claim => {
+                    const review = (claim.claimReview && claim.claimReview[0]) || {};
+                    let namaDomain = review.publisher && review.publisher.name ? review.publisher.name : 'Fact Check';
+                    return {
+                        judul: claim.text || review.title || 'Klaim tanpa judul',
+                        deskripsi: (review.textualRating ? `Rating: ${review.textualRating}. ` : '') + (claim.claimant ? `Klaim oleh: ${claim.claimant}.` : ''),
+                        sumber: namaDomain,
+                        link: review.url || '#'
+                    };
+                });
+            } catch (error) {
+                console.error('Gagal ambil Fact Check API:', error);
+                return [];
+            }
+        }
+
+        async function muatSemuaData(query) {
+            container.innerHTML = `<div class="col-span-1 md:col-span-3 text-center py-12 text-slate-500 text-sm">Mencari di seluruh jaringan konsorsium...</div>`;
+
+            const [dataRSS, dataFactCheck] = await Promise.all([
+                query ? [] : ambilDataRSS(),
+                ambilDataFactCheck(query)
+            ]);
+
+            const gabungan = [...dataFactCheck, ...dataRSS];
+            sectionLabel.textContent = query ? `Hasil Pencarian: "${query}"` : 'Klarifikasi Multi-Sumber Terkini';
+            tampilkanBerita(gabungan);
         }
 
         function tampilkanBerita(items) {
             container.innerHTML = '';
-            
-            if(!items || items.length === 0) {
-                container.innerHTML = '<div class="col-span-3 text-center text-slate-500 text-sm">Tidak ada data informasi saat ini.</div>';
+
+            if (!items || items.length === 0) {
+                container.innerHTML = '<div class="col-span-1 md:col-span-3 text-center text-slate-500 text-sm">Tidak ada hasil ditemukan. Coba kata kunci lain.</div>';
                 return;
             }
 
             items.forEach(item => {
                 const div = document.createElement('div');
-                
-                // --- KUNCI JAWABAN: LOGIKA DETEKSI OTOMATIS ASAL WEBSITE ---
-                const objekUrl = new URL(item.link);
-                let namaDomain = objekUrl.hostname.replace('www.', ''); // Mengambil contoh: turnbackhoax.id
-                
-                // Merapikan tampilan nama domain agar enak dibaca manusia
-                if (namaDomain === 'turnbackhoax.id') {
-                    namaDomain = 'TurnBackHoax';
-                }
-
                 div.className = "glass-card rounded-3xl p-6 hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/5 flex flex-col justify-between group";
-                const deskripsiBersih = item.description.replace(/<[^>]*>/g, '').substring(0, 130) + '...';
-                
+
                 div.innerHTML = `
                     <div>
                         <div class="flex justify-between items-center mb-4">
                             <span class="bg-red-500/10 text-red-400 text-[9px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider">Klarifikasi</span>
-                            <!-- Label ini sekarang 100% Jujur sesuai deteksi link asal -->
-                            <span class="text-[10px] text-indigo-400 font-semibold bg-indigo-950/80 px-2.5 py-1 rounded-md border border-indigo-500/20 tracking-wide">${namaDomain}</span>
+                            <span class="text-[10px] text-indigo-400 font-semibold bg-indigo-950/80 px-2.5 py-1 rounded-md border border-indigo-500/20 tracking-wide">${item.sumber}</span>
                         </div>
-                        <h3 class="font-extrabold text-white text-base md:text-lg leading-snug mb-3 group-hover:text-indigo-300 transition duration-300">${item.title}</h3>
-                        <p class="text-slate-400 text-xs md:text-sm leading-relaxed">${deskripsiBersih}</p>
+                        <h3 class="font-extrabold text-white text-base md:text-lg leading-snug mb-3 group-hover:text-indigo-300 transition duration-300">${item.judul}</h3>
+                        <p class="text-slate-400 text-xs md:text-sm leading-relaxed">${item.deskripsi}</p>
                     </div>
                     <div class="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
                         <span class="text-[10px] text-slate-500">Status: Validated</span>
@@ -163,16 +189,14 @@
         }
 
         searchInput.addEventListener('input', (e) => {
-            const kataKunci = e.target.value.toLowerCase().trim();
-            const semuaKartu = container.querySelectorAll('& > div');
-            
-            semuaKartu.forEach(kartu => {
-                const isiTeks = kartu.textContent.toLowerCase();
-                kartu.style.display = isiTeks.includes(kataKunci) ? '' : 'none';
-            });
+            clearTimeout(debounceTimer);
+            const kataKunci = e.target.value;
+            debounceTimer = setTimeout(() => {
+                muatSemuaData(kataKunci);
+            }, 600);
         });
 
-        ambilDataMultiSumber();
+        muatSemuaData('');
     </script>
 </body>
 </html>
