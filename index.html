@@ -30,7 +30,6 @@
     min-height:100vh;
   }
   .mono{ font-family:'IBM Plex Mono',monospace; letter-spacing:0.04em; }
-
   header.masthead{
     border-bottom:3px solid var(--ink);
     padding:18px 20px 14px;
@@ -60,14 +59,13 @@
     color:var(--ink-soft);
   }
   .dot{ width:7px;height:7px;border-radius:50%;background:var(--green); animation:pulse 1.8s infinite; }
+  .dot.err{ background:var(--red); animation:none; }
   @keyframes pulse{
     0%{box-shadow:0 0 0 0 rgba(60,110,74,0.5);}
     70%{box-shadow:0 0 0 7px rgba(60,110,74,0);}
     100%{box-shadow:0 0 0 0 rgba(60,110,74,0);}
   }
-
   main{ max-width:900px; margin:0 auto; padding:0 20px; }
-
   .hero{ padding:44px 0 28px; text-align:left; }
   .hero h1{
     font-family:'Fraunces',serif;
@@ -85,7 +83,6 @@
     max-width:52ch;
     margin:0 0 26px;
   }
-
   .intake{
     background:var(--paper-card);
     border:1.5px solid var(--ink);
@@ -106,14 +103,12 @@
   .intake input::placeholder{ color:#A79F87; }
   .status-line{ font-size:11px; margin-top:10px; min-height:14px; color:var(--ink-soft); }
   .status-line.active{ color:var(--red); }
-
   .sources{ display:flex; gap:8px; flex-wrap:wrap; margin:22px 0 40px; }
   .source-chip{
     font-size:10px; padding:5px 10px; border:1px solid var(--rule);
     text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-soft);
   }
   .source-chip.on{ border-color:var(--ink); color:var(--ink); background:var(--paper-card); }
-
   .torn{
     height:14px;
     background-image: linear-gradient(135deg, var(--paper) 50%, transparent 50%),
@@ -121,14 +116,11 @@
     background-size: 16px 16px; background-position: bottom; background-repeat: repeat-x;
     margin-bottom:6px;
   }
-
   .section-head{ display:flex; align-items:center; gap:12px; margin:0 0 22px; }
   .section-head span{ font-size:11px; text-transform:uppercase; letter-spacing:0.12em; color:var(--ink-soft); white-space:nowrap; }
   .section-head .line{ height:1px; background:var(--rule); flex-grow:1; }
-
   #news-container{ display:grid; grid-template-columns:1fr; gap:18px; padding-bottom:70px; }
   @media(min-width:720px){ #news-container{ grid-template-columns:1fr 1fr; } }
-
   .card{ position:relative; background:var(--paper-card); border:1px solid var(--ink); padding:20px 18px 18px; }
   .stamp{
     position:absolute; top:-10px; right:14px; transform:rotate(-6deg);
@@ -140,7 +132,6 @@
   .stamp.benar{ border-color:var(--green); color:var(--green); }
   .stamp.periksa{ border-color:var(--amber); color:var(--amber); }
   .stamp.netral{ border-color:var(--grey); color:var(--grey); }
-
   .card .meta{ font-size:10px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px; }
   .card .meta .src{ font-weight:600; color:var(--ink); }
   .card h3{ font-family:'Fraunces',serif; font-weight:700; font-size:18px; line-height:1.3; margin:0 0 10px; }
@@ -151,9 +142,8 @@
     color:var(--ink); text-decoration:none; border:1px solid var(--ink); padding:6px 12px; transition:.15s;
   }
   .card .foot a:hover{ background:var(--ink); color:var(--paper-card); }
-
   .empty{ grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--ink-soft); font-size:14px; }
-
+  .empty.warn{ color:var(--red); }
   footer{ border-top:3px solid var(--ink); padding:36px 20px; }
   .colophon{ max-width:340px; margin:0 auto; text-align:center; border:1px solid var(--ink); padding:18px; background:var(--paper-card); }
   .colophon .eyebrow{ font-size:9px; letter-spacing:0.14em; text-transform:uppercase; color:var(--red); margin-bottom:6px; }
@@ -169,14 +159,13 @@
     <span class="brand-tab mono">Berkas Digital No. 26613</span><br>
     <span class="brand-name">FAKTAKLIK</span>
   </div>
-  <div class="status-live"><span class="dot"></span>Live</div>
+  <div class="status-live"><span id="liveDot" class="dot"></span><span id="liveLabel">Live</span></div>
 </header>
 
 <main>
   <section class="hero">
     <h1>Saring<br><em>sebelum</em> sharing.</h1>
     <p>Sebelum kamu percaya video atau postingan yang lagi viral, cek dulu di sini. FaktaKlik menelusuri jaringan pemeriksa fakta untuk mengonfirmasi apakah klaim itu benar, salah, atau masih perlu dicermati.</p>
-
     <div class="intake">
       <div class="intake-label mono">
         <span>Ajukan Pemeriksaan</span>
@@ -185,7 +174,6 @@
       <input id="searchInput" type="text" placeholder="Tempel link TikTok, atau ketik topik/kata kunci...">
       <div id="statusLine" class="status-line mono"></div>
     </div>
-
     <div class="sources">
       <span class="source-chip on">● Google Fact Check</span>
       <span class="source-chip on">● TurnBackHoax.id</span>
@@ -194,15 +182,12 @@
       <span class="source-chip">○ Kompas Cek Fakta — segera</span>
     </div>
   </section>
-
   <div class="torn"></div>
-
   <section>
     <div class="section-head">
       <span id="section-label" class="mono">Klarifikasi Terkini</span>
       <div class="line"></div>
     </div>
-
     <div id="news-container">
       <div class="empty">Mengamankan jalur data multi-konsorsium...</div>
     </div>
@@ -219,17 +204,26 @@
 </footer>
 
 <script>
+const FACTCHECK_PROXY_URL = 'https://faktaklik-proxy.abaxjaya.workers.dev';
+const DEV_ONLY_API_KEY = '';
+
 const container = document.getElementById('news-container');
 const searchInput = document.getElementById('searchInput');
 const sectionLabel = document.getElementById('section-label');
 const statusLine = document.getElementById('statusLine');
 const charCount = document.getElementById('charCount');
+const liveDot = document.getElementById('liveDot');
+const liveLabel = document.getElementById('liveLabel');
 
-const GOOGLE_API_KEY = 'AIzaSyAeywODxfVoifRq23yihVLV7Vp7P2w415E';
 const pipaRSS = ['https://turnbackhoax.id/feed'];
 let debounceTimer;
+const DEFAULT_QUERIES = ['vaksin', 'pemilu', 'bansos', 'gempa'];
 
-// ==== Deteksi Link TikTok ====
+function setLiveStatus(ok, label){
+  liveDot.classList.toggle('err', !ok);
+  liveLabel.textContent = label;
+}
+
 function isTikTokLink(text){
   return /tiktok\.com/i.test(text.trim());
 }
@@ -244,12 +238,11 @@ async function ambilJudulTikTok(link){
     statusLine.textContent = `Terbaca: "${data.title}" — oleh ${data.author_name || 'akun tidak diketahui'}`;
     return data.title || '';
   }catch(err){
-    statusLine.textContent = 'Tautan ini tidak bisa dibaca otomatis. Coba salin judul/caption videonya secara manual.';
+    statusLine.textContent = 'Tautan ini tidak bisa dibaca otomatis (kemungkinan diblokir CORS oleh TikTok). Coba salin judul/caption videonya secara manual.';
     return '';
   }
 }
 
-// ==== Sumber 1: RSS TurnBackHoax ====
 async function ambilDataRSS(){
   try{
     const requests = pipaRSS.map(url => fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`).then(r=>r.json()));
@@ -257,10 +250,11 @@ async function ambilDataRSS(){
     let semua = [];
     results.forEach(res=>{ if(res.items) semua = semua.concat(res.items); });
     return semua.map(item=>{
-      const domain = new URL(item.link).hostname.replace('www.','');
+      let domain = 'turnbackhoax.id';
+      try{ domain = new URL(item.link).hostname.replace('www.',''); }catch(e){}
       return {
         judul:item.title,
-        deskripsi:item.description.replace(/<[^>]*>/g,'').substring(0,130)+'...',
+        deskripsi:(item.description || '').replace(/<[^>]*>/g,'').substring(0,130)+'...',
         sumber: domain==='turnbackhoax.id' ? 'TurnBackHoax' : domain,
         link:item.link,
         rating:'hoax'
@@ -269,7 +263,6 @@ async function ambilDataRSS(){
   }catch(e){ console.error('RSS error', e); return []; }
 }
 
-// ==== Sumber 2: Google Fact Check Tools API ====
 function klasifikasiRating(teks){
   const t = (teks||'').toLowerCase();
   if(/hoax|hoaks|false|salah|keliru|palsu|fabricated|bohong/.test(t)) return 'hoax';
@@ -278,25 +271,64 @@ function klasifikasiRating(teks){
   return 'netral';
 }
 
+function petakanClaims(claims){
+  return (claims || []).map(claim=>{
+    const review = (claim.claimReview && claim.claimReview[0]) || {};
+    const namaSumber = (review.publisher && review.publisher.name) ? review.publisher.name : 'Fact Check';
+    return {
+      judul: claim.text || review.title || 'Klaim tanpa judul',
+      deskripsi: (claim.claimant ? `Klaim oleh: ${claim.claimant}. ` : '') + (review.textualRating ? `Penilaian: ${review.textualRating}.` : ''),
+      sumber: namaSumber,
+      link: review.url || '#',
+      rating: klasifikasiRating(review.textualRating)
+    };
+  });
+}
+
+async function panggilFactCheck(query){
+  if(FACTCHECK_PROXY_URL){
+    const url = `${FACTCHECK_PROXY_URL}?query=${encodeURIComponent(query)}&languageCode=id&pageSize=15`;
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('Proxy gagal: ' + res.status);
+    return res.json();
+  }
+  if(DEV_ONLY_API_KEY){
+    const url = `https://factchecktools.googleapis.com/v1alpha1/claims:search?query=${encodeURIComponent(query)}&languageCode=id&pageSize=15&key=${DEV_ONLY_API_KEY}`;
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('Google API gagal: ' + res.status);
+    return res.json();
+  }
+  throw new Error('Belum dikonfigurasi: isi FACTCHECK_PROXY_URL (produksi) atau DEV_ONLY_API_KEY (lokal saja).');
+}
+
 async function ambilDataFactCheck(query){
   try{
-    const kataKunci = query && query.trim().length>0 ? query.trim() : 'berita';
-    const url = `https://factchecktools.googleapis.com/v1alpha1/claims:search?query=${encodeURIComponent(kataKunci)}&languageCode=id&pageSize=15&key=${GOOGLE_API_KEY}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    if(!data.claims) return [];
-    return data.claims.map(claim=>{
-      const review = (claim.claimReview && claim.claimReview[0]) || {};
-      const namaSumber = (review.publisher && review.publisher.name) ? review.publisher.name : 'Fact Check';
-      return {
-        judul: claim.text || review.title || 'Klaim tanpa judul',
-        deskripsi: (claim.claimant ? `Klaim oleh: ${claim.claimant}. ` : '') + (review.textualRating ? `Penilaian: ${review.textualRating}.` : ''),
-        sumber: namaSumber,
-        link: review.url || '#',
-        rating: klasifikasiRating(review.textualRating)
-      };
-    });
-  }catch(e){ console.error('Fact Check API error', e); return []; }
+    const data = await panggilFactCheck(query);
+    setLiveStatus(true, 'Live');
+    return petakanClaims(data.claims);
+  }catch(e){
+    console.error('Fact Check API error', e);
+    setLiveStatus(false, 'Offline');
+    return [];
+  }
+}
+
+async function ambilDataFactCheckDefault(){
+  try{
+    const hasil = await Promise.all(DEFAULT_QUERIES.map(q => panggilFactCheck(q).catch(()=>({claims:[]}))));
+    setLiveStatus(true, 'Live');
+    const gabung = hasil.flatMap(d => petakanClaims(d.claims));
+    const unik = [];
+    const seen = new Set();
+    for(const item of gabung){
+      if(!seen.has(item.link)){ seen.add(item.link); unik.push(item); }
+    }
+    return unik;
+  }catch(e){
+    console.error('Fact Check default error', e);
+    setLiveStatus(false, 'Offline');
+    return [];
+  }
 }
 
 async function muatSemuaData(rawInput){
@@ -310,22 +342,44 @@ async function muatSemuaData(rawInput){
     statusLine.classList.remove('active');
   }
 
-  const [dataRSS, dataFC] = await Promise.all([
-    query ? [] : ambilDataRSS(),
-    ambilDataFactCheck(query)
-  ]);
+  let dataFC, dataRSS;
+  if(query && query.trim().length > 0){
+    [dataFC, dataRSS] = await Promise.all([
+      ambilDataFactCheck(query),
+      ambilDataRSS()
+    ]);
+    const q = query.toLowerCase();
+    dataRSS = dataRSS.filter(item => item.judul.toLowerCase().includes(q) || item.deskripsi.toLowerCase().includes(q));
+  } else {
+    [dataFC, dataRSS] = await Promise.all([
+      ambilDataFactCheckDefault(),
+      ambilDataRSS()
+    ]);
+  }
 
   const gabungan = [...dataFC, ...dataRSS];
   sectionLabel.textContent = rawInput ? `Hasil Pencarian` : 'Klarifikasi Terkini';
-  tampilkanBerita(gabungan);
+  tampilkanBerita(gabungan, !FACTCHECK_PROXY_URL && !DEV_ONLY_API_KEY);
 }
 
 const stampLabel = { hoax:'HOAKS', benar:'TERVERIFIKASI', periksa:'PERLU DICERMATI', netral:'PERLU DIPERIKSA' };
 
-function tampilkanBerita(items){
+function escapeHTML(str){
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+function tampilkanBerita(items, belumDikonfigurasi){
   container.innerHTML = '';
+
+  if(belumDikonfigurasi){
+    container.innerHTML = `<div class="empty warn">Sumber Google Fact Check belum terhubung.</div>`;
+    if(!items || items.length === 0) return;
+  }
+
   if(!items || items.length===0){
-    container.innerHTML = '<div class="empty">Tidak ada berkas ditemukan. Coba kata kunci atau tautan lain.</div>';
+    container.innerHTML += '<div class="empty">Tidak ada berkas ditemukan. Coba kata kunci atau tautan lain.</div>';
     return;
   }
   items.forEach(item=>{
@@ -333,12 +387,12 @@ function tampilkanBerita(items){
     div.className = 'card';
     div.innerHTML = `
       <div class="stamp ${item.rating}">${stampLabel[item.rating]}</div>
-      <div class="meta"><span class="src">${item.sumber}</span></div>
-      <h3>${item.judul}</h3>
-      <p>${item.deskripsi}</p>
+      <div class="meta"><span class="src">${escapeHTML(item.sumber)}</span></div>
+      <h3>${escapeHTML(item.judul)}</h3>
+      <p>${escapeHTML(item.deskripsi)}</p>
       <div class="foot">
         <span class="mono" style="font-size:10px;color:var(--ink-soft);">Status: Divalidasi</span>
-        <a href="${item.link}" target="_blank">Buka Bukti →</a>
+        <a href="${escapeHTML(item.link)}" target="_blank" rel="noopener noreferrer">Buka Bukti →</a>
       </div>
     `;
     container.appendChild(div);
