@@ -9,21 +9,22 @@
 <style>
   :root{
     --paper:#EFE7D6;
-    --paper-card:#F6F0E3;
+    --paper-card:#FFFFFF;
     --paper-edge:#DED2B4;
     --ink:#221D15;
     --ink-soft:#5B5644;
     --rule:rgba(34,29,21,0.18);
-    --red:#AE3427;
-    --green:#3C6E4A;
-    --amber:#A9791E;
+    --blue:#2A5A8C;
+    --red:#D32F2F;
+    --green:#2E7D32;
+    --amber:#F57F17;
     --grey:#6B6553;
   }
   *{box-sizing:border-box;}
   body{
     margin:0;
     background-color:var(--paper);
-    background-image: radial-gradient(circle at 1px 1px, rgba(34,29,21,0.05) 1px, transparent 0);
+    background-image: radial-gradient(circle at 1px 1px, rgba(34,29,21,0.03) 1px, transparent 0);
     background-size: 22px 22px;
     color:var(--ink);
     font-family:'Inter',sans-serif;
@@ -40,7 +41,7 @@
   .brand-tab{
     display:inline-block;
     background:var(--ink);
-    color:var(--paper-card);
+    color:#FFF;
     padding:3px 10px;
     font-size:10px;
     letter-spacing:0.14em;
@@ -61,9 +62,9 @@
   .dot{ width:7px;height:7px;border-radius:50%;background:var(--green); animation:pulse 1.8s infinite; }
   .dot.err{ background:var(--red); animation:none; }
   @keyframes pulse{
-    0%{box-shadow:0 0 0 0 rgba(60,110,74,0.5);}
-    70%{box-shadow:0 0 0 7px rgba(60,110,74,0);}
-    100%{box-shadow:0 0 0 0 rgba(60,110,74,0);}
+    0%{box-shadow:0 0 0 0 rgba(46,125,50,0.5);}
+    70%{box-shadow:0 0 0 7px rgba(46,125,50,0);}
+    100%{box-shadow:0 0 0 0 rgba(46,125,50,0);}
   }
   main{ max-width:900px; margin:0 auto; padding:0 20px; }
   .hero{ padding:44px 0 28px; text-align:left; }
@@ -85,30 +86,60 @@
   }
   .intake{
     background:var(--paper-card);
-    border:1.5px solid var(--ink);
-    box-shadow:5px 5px 0 var(--paper-edge), 5px 5px 0 1.5px var(--ink);
-    padding:16px 18px 18px;
-    margin-bottom:8px;
+    border:2px solid var(--ink);
+    box-shadow:8px 8px 0 var(--ink);
+    padding:20px 22px;
+    margin-bottom:24px;
+    border-radius:4px;
   }
   .intake-label{
-    font-size:10px; text-transform:uppercase; color:var(--ink-soft);
-    margin-bottom:8px; display:flex; justify-content:space-between;
+    font-size:11px; font-weight:600; text-transform:uppercase; color:var(--ink);
+    margin-bottom:12px; display:flex; justify-content:space-between;
   }
   .intake input{
-    width:100%; border:none; border-bottom:1.5px solid var(--rule);
-    background:transparent; font-family:'Inter',sans-serif; font-size:16px;
-    padding:6px 2px 10px; color:var(--ink);
+    width:100%; border:none; border-bottom:2px solid var(--rule);
+    background:transparent; font-family:'Inter',sans-serif; font-size:17px;
+    padding:8px 2px 12px; color:var(--ink); margin-bottom:16px;
   }
-  .intake input:focus{ outline:none; border-bottom-color:var(--ink); }
-  .intake input::placeholder{ color:#A79F87; }
-  .status-line{ font-size:11px; margin-top:10px; min-height:14px; color:var(--ink-soft); }
-  .status-line.active{ color:var(--red); }
-  .sources{ display:flex; gap:8px; flex-wrap:wrap; margin:22px 0 40px; }
+  .intake input:focus{ outline:none; border-bottom-color:var(--blue); }
+  .intake input::placeholder{ color:#A79F87; font-size:15px; }
+  .btn-submit {
+    width: 100%;
+    background-color: var(--blue);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 14px;
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 var(--ink);
+    transition: all 0.2s ease;
+  }
+  .btn-submit:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--ink);
+  }
+  .btn-submit:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0 var(--ink);
+  }
+  .status-line{ font-size:12px; margin-top:12px; min-height:14px; color:var(--ink-soft); }
+  .status-line.active{ color:var(--blue); font-weight: 500; }
+  .sources-container { display: flex; flex-direction: column; gap: 16px; margin: 0 0 40px; }
+  .source-group { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .source-group-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--ink-soft); width: 100px; }
   .source-chip{
-    font-size:10px; padding:5px 10px; border:1px solid var(--rule);
-    text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-soft);
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size:11px; padding:6px 12px; border:1px solid var(--rule);
+    border-radius: 20px;
+    text-transform:uppercase; font-weight:600; letter-spacing:0.02em; color:var(--ink-soft);
+    background: transparent;
   }
   .source-chip.on{ border-color:var(--ink); color:var(--ink); background:var(--paper-card); }
+  .source-chip.pending { opacity: 0.5; border-style: dashed; }
   .torn{
     height:14px;
     background-image: linear-gradient(135deg, var(--paper) 50%, transparent 50%),
@@ -117,31 +148,54 @@
     margin-bottom:6px;
   }
   .section-head{ display:flex; align-items:center; gap:12px; margin:0 0 22px; }
-  .section-head span{ font-size:11px; text-transform:uppercase; letter-spacing:0.12em; color:var(--ink-soft); white-space:nowrap; }
-  .section-head .line{ height:1px; background:var(--rule); flex-grow:1; }
-  #news-container{ display:grid; grid-template-columns:1fr; gap:18px; padding-bottom:70px; }
+  .section-head span{ font-size:11px; text-transform:uppercase; letter-spacing:0.12em; font-weight: 700; color:var(--ink); white-space:nowrap; }
+  .section-head .line{ height:2px; background:var(--ink); flex-grow:1; opacity: 0.1; }
+  #news-container{ display:grid; grid-template-columns:1fr; gap:24px; padding-bottom:70px; }
   @media(min-width:720px){ #news-container{ grid-template-columns:1fr 1fr; } }
-  .card{ position:relative; background:var(--paper-card); border:1px solid var(--ink); padding:20px 18px 18px; }
-  .stamp{
-    position:absolute; top:-10px; right:14px; transform:rotate(-6deg);
-    border:2px solid var(--grey); color:var(--grey);
-    font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:10.5px; letter-spacing:0.08em;
-    padding:3px 8px; background:var(--paper-card); text-transform:uppercase;
+  .card{ 
+    display: flex; flex-direction: column;
+    background:var(--paper-card); 
+    border:1px solid var(--ink); 
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 4px 4px 0 rgba(34,29,21,0.08); 
+    transition: transform 0.2s;
   }
-  .stamp.hoax{ border-color:var(--red); color:var(--red); }
-  .stamp.benar{ border-color:var(--green); color:var(--green); }
-  .stamp.periksa{ border-color:var(--amber); color:var(--amber); }
-  .stamp.netral{ border-color:var(--grey); color:var(--grey); }
-  .card .meta{ font-size:10px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px; }
-  .card .meta .src{ font-weight:600; color:var(--ink); }
+  .card:hover { transform: translateY(-4px); box-shadow: 6px 6px 0 rgba(34,29,21,0.12); }
+  .card-thumb {
+    width: 100%;
+    height: 160px;
+    background-color: var(--paper-edge);
+    background-size: cover;
+    background-position: center;
+    border-bottom: 1px solid var(--rule);
+  }
+  .card-thumb.placeholder {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink-soft); opacity: 0.5; font-size: 24px;
+  }
+  .card-content { padding: 18px; display: flex; flex-direction: column; flex-grow: 1; }
+  .badge-container { display: flex; gap: 8px; margin-bottom: 12px; }
+  .pill {
+    padding: 4px 10px; border-radius: 12px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .pill.hoax { background-color: #FDE0E0; color: var(--red); border: 1px solid var(--red); }
+  .pill.benar { background-color: #E8F5E9; color: var(--green); border: 1px solid var(--green); }
+  .pill.periksa { background-color: #FFF8E1; color: var(--amber); border: 1px solid var(--amber); }
+  .pill.netral { background-color: #F5F5F5; color: var(--grey); border: 1px solid var(--grey); }
+  .card .meta{ font-size:11px; color:#888; margin-bottom:8px; display: flex; justify-content: space-between; }
+  .card .meta .src{ font-weight:600; color:var(--ink-soft); }
   .card h3{ font-family:'Fraunces',serif; font-weight:700; font-size:18px; line-height:1.3; margin:0 0 10px; }
-  .card p{ font-size:13px; color:var(--ink-soft); line-height:1.55; margin:0 0 16px; }
-  .card .foot{ display:flex; justify-content:space-between; align-items:center; border-top:1px dashed var(--rule); padding-top:12px; }
+  .card p{ font-size:13px; color:var(--ink-soft); line-height:1.55; margin:0 0 20px; flex-grow: 1; }
+  .card .foot{ display:flex; justify-content:space-between; align-items:center; border-top:1px dashed var(--rule); padding-top:16px; margin-top: auto; }
+  .card .foot span { font-size: 10px; color: #888; }
   .card .foot a{
-    font-size:11px; text-transform:uppercase; letter-spacing:0.06em;
-    color:var(--ink); text-decoration:none; border:1px solid var(--ink); padding:6px 12px; transition:.15s;
+    font-size:11px; font-weight: 600; text-transform:uppercase; letter-spacing:0.06em;
+    color:var(--blue); text-decoration:none; 
+    border:1px solid var(--blue); padding:8px 14px; border-radius: 4px; transition:.15s;
   }
-  .card .foot a:hover{ background:var(--ink); color:var(--paper-card); }
+  .card .foot a:hover{ background:var(--blue); color:var(--paper-card); }
   .empty{ grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--ink-soft); font-size:14px; }
   .empty.warn{ color:var(--red); }
   footer{ border-top:3px solid var(--ink); padding:36px 20px; }
@@ -166,23 +220,34 @@
   <section class="hero">
     <h1>Saring<br><em>sebelum</em> sharing.</h1>
     <p>Sebelum kamu percaya video atau postingan yang lagi viral, cek dulu di sini. FaktaKlik menelusuri jaringan pemeriksa fakta untuk mengonfirmasi apakah klaim itu benar, salah, atau masih perlu dicermati.</p>
+    
     <div class="intake">
       <div class="intake-label mono">
         <span>Ajukan Pemeriksaan</span>
-        <span id="charCount">0</span>
+        <span id="charCount">0/200</span>
       </div>
-      <input id="searchInput" type="text" placeholder="Tempel link TikTok, atau ketik topik/kata kunci...">
+      <input id="searchInput" type="text" placeholder="Contoh: https://tiktok.com/@... atau 'vaksin bikin autis'">
+      <button id="submitBtn" class="btn-submit">CEK FAKTA SEKARANG</button>
       <div id="statusLine" class="status-line mono"></div>
     </div>
-    <div class="sources">
-      <span class="source-chip on">● Google Fact Check</span>
-      <span class="source-chip on">● TurnBackHoax.id</span>
-      <span class="source-chip on">● Deteksi Tautan TikTok</span>
-      <span class="source-chip">○ Tempo Cek Fakta — segera</span>
-      <span class="source-chip">○ Kompas Cek Fakta — segera</span>
+
+    <div class="sources-container">
+      <div class="source-group">
+        <div class="source-group-title">Cek Cepat</div>
+        <span class="source-chip on">🔍 Google Fact Check</span>
+        <span class="source-chip on">📱 Deteksi TikTok</span>
+      </div>
+      <div class="source-group">
+        <div class="source-group-title">Cek Manual</div>
+        <span class="source-chip on">🛡️ TurnBackHoax</span>
+        <span class="source-chip pending">⏳ Tempo (Segera)</span>
+        <span class="source-chip pending">⏳ Kompas (Segera)</span>
+      </div>
     </div>
   </section>
+  
   <div class="torn"></div>
+  
   <section>
     <div class="section-head">
       <span id="section-label" class="mono">Klarifikasi Terkini</span>
@@ -209,6 +274,7 @@ const DEV_ONLY_API_KEY = '';
 
 const container = document.getElementById('news-container');
 const searchInput = document.getElementById('searchInput');
+const submitBtn = document.getElementById('submitBtn');
 const sectionLabel = document.getElementById('section-label');
 const statusLine = document.getElementById('statusLine');
 const charCount = document.getElementById('charCount');
@@ -216,7 +282,6 @@ const liveDot = document.getElementById('liveDot');
 const liveLabel = document.getElementById('liveLabel');
 
 const pipaRSS = ['https://turnbackhoax.id/feed'];
-let debounceTimer;
 const DEFAULT_QUERIES = ['vaksin', 'pemilu', 'bansos', 'gempa'];
 
 function setLiveStatus(ok, label){
@@ -238,9 +303,14 @@ async function ambilJudulTikTok(link){
     statusLine.textContent = `Terbaca: "${data.title}" — oleh ${data.author_name || 'akun tidak diketahui'}`;
     return data.title || '';
   }catch(err){
-    statusLine.textContent = 'Tautan ini tidak bisa dibaca otomatis (kemungkinan diblokir CORS oleh TikTok). Coba salin judul/caption videonya secara manual.';
-    return '';
+    statusLine.textContent = 'Tautan ini tidak bisa dibaca otomatis. Menelusuri URL utuh...';
+    return link.trim();
   }
+}
+
+function ekstrakGambar(htmlString) {
+  const match = htmlString.match(/<img[^>]+src="([^">]+)"/);
+  return match ? match[1] : null;
 }
 
 async function ambilDataRSS(){
@@ -253,11 +323,13 @@ async function ambilDataRSS(){
       let domain = 'turnbackhoax.id';
       try{ domain = new URL(item.link).hostname.replace('www.',''); }catch(e){}
       return {
-        judul:item.title,
-        deskripsi:(item.description || '').replace(/<[^>]*>/g,'').substring(0,130)+'...',
+        judul: item.title,
+        deskripsi: (item.description || '').replace(/<[^>]*>/g,'').substring(0,130)+'...',
         sumber: domain==='turnbackhoax.id' ? 'TurnBackHoax' : domain,
-        link:item.link,
-        rating:'hoax'
+        link: item.link,
+        rating: 'hoax',
+        tanggal: item.pubDate ? item.pubDate.split(' ')[0] : '',
+        gambar: ekstrakGambar(item.description || item.content || '')
       };
     });
   }catch(e){ console.error('RSS error', e); return []; }
@@ -277,10 +349,12 @@ function petakanClaims(claims){
     const namaSumber = (review.publisher && review.publisher.name) ? review.publisher.name : 'Fact Check';
     return {
       judul: claim.text || review.title || 'Klaim tanpa judul',
-      deskripsi: (claim.claimant ? `Klaim oleh: ${claim.claimant}. ` : '') + (review.textualRating ? `Penilaian: ${review.textualRating}.` : ''),
+      deskripsi: (claim.claimant ? `Klaim: "${claim.claimant}". ` : '') + (review.textualRating ? `Faktanya: ${review.textualRating}.` : ''),
       sumber: namaSumber,
       link: review.url || '#',
-      rating: klasifikasiRating(review.textualRating)
+      rating: klasifikasiRating(review.textualRating),
+      tanggal: review.reviewDate ? review.reviewDate.split('T')[0] : (claim.claimDate ? claim.claimDate.split('T')[0] : ''),
+      gambar: null
     };
   });
 }
@@ -298,7 +372,7 @@ async function panggilFactCheck(query){
     if(!res.ok) throw new Error('Google API gagal: ' + res.status);
     return res.json();
   }
-  throw new Error('Belum dikonfigurasi: isi FACTCHECK_PROXY_URL (produksi) atau DEV_ONLY_API_KEY (lokal saja).');
+  throw new Error('Belum dikonfigurasi.');
 }
 
 async function ambilDataFactCheck(query){
@@ -307,7 +381,6 @@ async function ambilDataFactCheck(query){
     setLiveStatus(true, 'Live');
     return petakanClaims(data.claims);
   }catch(e){
-    console.error('Fact Check API error', e);
     setLiveStatus(false, 'Offline');
     return [];
   }
@@ -325,7 +398,6 @@ async function ambilDataFactCheckDefault(){
     }
     return unik;
   }catch(e){
-    console.error('Fact Check default error', e);
     setLiveStatus(false, 'Offline');
     return [];
   }
@@ -333,6 +405,8 @@ async function ambilDataFactCheckDefault(){
 
 async function muatSemuaData(rawInput){
   container.innerHTML = `<div class="empty">Menelusuri seluruh jaringan konsorsium...</div>`;
+  submitBtn.textContent = 'MEMPROSES...';
+  submitBtn.disabled = true;
 
   let query = rawInput;
   if(rawInput && isTikTokLink(rawInput)){
@@ -360,9 +434,12 @@ async function muatSemuaData(rawInput){
   const gabungan = [...dataFC, ...dataRSS];
   sectionLabel.textContent = rawInput ? `Hasil Pencarian` : 'Klarifikasi Terkini';
   tampilkanBerita(gabungan, !FACTCHECK_PROXY_URL && !DEV_ONLY_API_KEY);
+  
+  submitBtn.textContent = 'CEK FAKTA SEKARANG';
+  submitBtn.disabled = false;
 }
 
-const stampLabel = { hoax:'HOAKS', benar:'TERVERIFIKASI', periksa:'PERLU DICERMATI', netral:'PERLU DIPERIKSA' };
+const stampLabel = { hoax:'HOAKS', benar:'VALID', periksa:'KELIRU / PERIKSA', netral:'BELUM JELAS' };
 
 function escapeHTML(str){
   const div = document.createElement('div');
@@ -379,35 +456,55 @@ function tampilkanBerita(items, belumDikonfigurasi){
   }
 
   if(!items || items.length===0){
-    container.innerHTML += '<div class="empty">Tidak ada berkas ditemukan. Coba kata kunci atau tautan lain.</div>';
+    container.innerHTML = '<div class="empty">Tidak ada berkas ditemukan. Coba kata kunci atau tautan lain.</div>';
     return;
   }
   items.forEach(item=>{
     const div = document.createElement('div');
     div.className = 'card';
+    
+    const thumbHTML = item.gambar 
+      ? `<div class="card-thumb" style="background-image: url('${item.gambar}')"></div>`
+      : `<div class="card-thumb placeholder">📸</div>`;
+      
+    const tanggalTeks = item.tanggal ? ` • ${item.tanggal}` : '';
+
     div.innerHTML = `
-      <div class="stamp ${item.rating}">${stampLabel[item.rating]}</div>
-      <div class="meta"><span class="src">${escapeHTML(item.sumber)}</span></div>
-      <h3>${escapeHTML(item.judul)}</h3>
-      <p>${escapeHTML(item.deskripsi)}</p>
-      <div class="foot">
-        <span class="mono" style="font-size:10px;color:var(--ink-soft);">Status: Divalidasi</span>
-        <a href="${escapeHTML(item.link)}" target="_blank" rel="noopener noreferrer">Buka Bukti →</a>
+      ${thumbHTML}
+      <div class="card-content">
+        <div class="badge-container">
+          <span class="pill ${item.rating}">${stampLabel[item.rating]}</span>
+        </div>
+        <h3>${escapeHTML(item.judul)}</h3>
+        <p>${escapeHTML(item.deskripsi)}</p>
+        
+        <div class="meta">
+          <span class="src">${escapeHTML(item.sumber)}</span>
+          <span>${escapeHTML(tanggalTeks)}</span>
+        </div>
+
+        <div class="foot">
+          <span class="mono">✓ Divalidasi</span>
+          <a href="${escapeHTML(item.link)}" target="_blank" rel="noopener noreferrer">Buka Bukti →</a>
+        </div>
       </div>
     `;
     container.appendChild(div);
   });
 }
 
-searchInput.addEventListener('input', (e)=>{
-  charCount.textContent = e.target.value.length;
-  clearTimeout(debounceTimer);
-  const val = e.target.value;
-  if(!isTikTokLink(val)){
-    statusLine.textContent = '';
-    statusLine.classList.remove('active');
+submitBtn.addEventListener('click', () => {
+  muatSemuaData(searchInput.value);
+});
+
+searchInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    muatSemuaData(e.target.value);
   }
-  debounceTimer = setTimeout(()=>{ muatSemuaData(val); }, 700);
+});
+
+searchInput.addEventListener('input', (e)=>{
+  charCount.textContent = `${e.target.value.length}/200`;
 });
 
 muatSemuaData('');
