@@ -15,9 +15,9 @@
     --ink-soft:#5B5644;
     --rule:rgba(34,29,21,0.18);
     --blue:#2A5A8C;
-    --red:#D32F2F;
+    --red:#C62828;
     --green:#2E7D32;
-    --amber:#F57F17;
+    --amber:#B45F06;
     --grey:#6B6553;
   }
   *{box-sizing:border-box;}
@@ -99,10 +99,11 @@
   .intake input{
     width:100%; border:none; border-bottom:2px solid var(--rule);
     background:transparent; font-family:'Inter',sans-serif; font-size:17px;
-    padding:8px 2px 12px; color:var(--ink); margin-bottom:16px;
+    padding:8px 2px 12px; color:var(--ink); margin-bottom:6px;
   }
   .intake input:focus{ outline:none; border-bottom-color:var(--blue); }
   .intake input::placeholder{ color:#A79F87; font-size:15px; }
+  .input-hint{ font-size:11px; color:var(--ink-soft); margin-bottom:14px; }
   .btn-submit {
     width: 100%;
     background-color: var(--blue);
@@ -118,13 +119,17 @@
     box-shadow: 3px 3px 0 var(--ink);
     transition: all 0.2s ease;
   }
-  .btn-submit:hover {
+  .btn-submit:hover:not(:disabled) {
     transform: translate(-2px, -2px);
     box-shadow: 5px 5px 0 var(--ink);
   }
-  .btn-submit:active {
+  .btn-submit:active:not(:disabled) {
     transform: translate(2px, 2px);
     box-shadow: 0px 0px 0 var(--ink);
+  }
+  .btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
   .status-line{ font-size:12px; margin-top:12px; min-height:14px; color:var(--ink-soft); }
   .status-line.active{ color:var(--blue); font-weight: 500; }
@@ -172,7 +177,9 @@
   }
   .card-thumb.placeholder {
     display: flex; align-items: center; justify-content: center;
-    color: var(--ink-soft); opacity: 0.5; font-size: 24px;
+    color: var(--ink-soft); opacity: 0.4; font-size: 24px;
+    height: auto;
+    padding: 10px 0;
   }
   .card-content { padding: 18px; display: flex; flex-direction: column; flex-grow: 1; }
   .badge-container { display: flex; gap: 8px; margin-bottom: 12px; }
@@ -180,10 +187,10 @@
     padding: 4px 10px; border-radius: 12px;
     font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
   }
-  .pill.hoax { background-color: #FDE0E0; color: var(--red); border: 1px solid var(--red); }
-  .pill.benar { background-color: #E8F5E9; color: var(--green); border: 1px solid var(--green); }
-  .pill.periksa { background-color: #FFF8E1; color: var(--amber); border: 1px solid var(--amber); }
-  .pill.netral { background-color: #F5F5F5; color: var(--grey); border: 1px solid var(--grey); }
+  .pill.hoax { background-color: var(--red); color: #FFF; border: 1px solid var(--red); }
+  .pill.benar { background-color: var(--green); color: #FFF; border: 1px solid var(--green); }
+  .pill.periksa { background-color: var(--amber); color: #FFF; border: 1px solid var(--amber); }
+  .pill.netral { background-color: var(--grey); color: #FFF; border: 1px solid var(--grey); }
   .card .meta{ font-size:11px; color:#888; margin-bottom:8px; display: flex; justify-content: space-between; }
   .card .meta .src{ font-weight:600; color:var(--ink-soft); }
   .card h3{ font-family:'Fraunces',serif; font-weight:700; font-size:18px; line-height:1.3; margin:0 0 10px; }
@@ -226,7 +233,8 @@
         <span>Ajukan Pemeriksaan</span>
         <span id="charCount">0/200</span>
       </div>
-      <input id="searchInput" type="text" placeholder="Contoh: https://tiktok.com/@... atau 'vaksin bikin autis'">
+      <input id="searchInput" type="text" maxlength="200" placeholder="Contoh: https://tiktok.com/@... atau 'vaksin bikin autis'">
+      <div class="input-hint mono">Tekan Enter atau klik tombol di bawah untuk mencari</div>
       <button id="submitBtn" class="btn-submit">CEK FAKTA SEKARANG</button>
       <div id="statusLine" class="status-line mono"></div>
     </div>
@@ -308,8 +316,13 @@ async function ambilJudulTikTok(link){
   }
 }
 
-function ekstrakGambar(htmlString) {
-  const match = htmlString.match(/<img[^>]+src="([^">]+)"/);
+// Perbaikan: cek beberapa kemungkinan sumber gambar dari RSS2JSON,
+// bukan cuma parsing tag <img> dari description (yang sering sudah di-strip).
+function ekstrakGambar(item) {
+  if (item.thumbnail && item.thumbnail.trim() !== '') return item.thumbnail;
+  if (item.enclosure && item.enclosure.link) return item.enclosure.link;
+  const sumberHTML = item.content || item.description || '';
+  const match = sumberHTML.match(/<img[^>]+src=["']([^"'>]+)["']/i);
   return match ? match[1] : null;
 }
 
@@ -329,7 +342,7 @@ async function ambilDataRSS(){
         link: item.link,
         rating: 'hoax',
         tanggal: item.pubDate ? item.pubDate.split(' ')[0] : '',
-        gambar: ekstrakGambar(item.description || item.content || '')
+        gambar: ekstrakGambar(item)
       };
     });
   }catch(e){ console.error('RSS error', e); return []; }
@@ -403,40 +416,46 @@ async function ambilDataFactCheckDefault(){
   }
 }
 
+// Perbaikan: guard di awal fungsi biar gak double-trigger kalau
+// user spam Enter/klik sebelum request sebelumnya selesai.
 async function muatSemuaData(rawInput){
+  if(submitBtn.disabled) return;
+
   container.innerHTML = `<div class="empty">Menelusuri seluruh jaringan konsorsium...</div>`;
   submitBtn.textContent = 'MEMPROSES...';
   submitBtn.disabled = true;
 
-  let query = rawInput;
-  if(rawInput && isTikTokLink(rawInput)){
-    query = await ambilJudulTikTok(rawInput);
-  } else {
-    statusLine.textContent = '';
-    statusLine.classList.remove('active');
-  }
+  try{
+    let query = rawInput;
+    if(rawInput && isTikTokLink(rawInput)){
+      query = await ambilJudulTikTok(rawInput);
+    } else {
+      statusLine.textContent = '';
+      statusLine.classList.remove('active');
+    }
 
-  let dataFC, dataRSS;
-  if(query && query.trim().length > 0){
-    [dataFC, dataRSS] = await Promise.all([
-      ambilDataFactCheck(query),
-      ambilDataRSS()
-    ]);
-    const q = query.toLowerCase();
-    dataRSS = dataRSS.filter(item => item.judul.toLowerCase().includes(q) || item.deskripsi.toLowerCase().includes(q));
-  } else {
-    [dataFC, dataRSS] = await Promise.all([
-      ambilDataFactCheckDefault(),
-      ambilDataRSS()
-    ]);
-  }
+    let dataFC, dataRSS;
+    if(query && query.trim().length > 0){
+      [dataFC, dataRSS] = await Promise.all([
+        ambilDataFactCheck(query),
+        ambilDataRSS()
+      ]);
+      const q = query.toLowerCase();
+      dataRSS = dataRSS.filter(item => item.judul.toLowerCase().includes(q) || item.deskripsi.toLowerCase().includes(q));
+    } else {
+      [dataFC, dataRSS] = await Promise.all([
+        ambilDataFactCheckDefault(),
+        ambilDataRSS()
+      ]);
+    }
 
-  const gabungan = [...dataFC, ...dataRSS];
-  sectionLabel.textContent = rawInput ? `Hasil Pencarian` : 'Klarifikasi Terkini';
-  tampilkanBerita(gabungan, !FACTCHECK_PROXY_URL && !DEV_ONLY_API_KEY);
-  
-  submitBtn.textContent = 'CEK FAKTA SEKARANG';
-  submitBtn.disabled = false;
+    const gabungan = [...dataFC, ...dataRSS];
+    sectionLabel.textContent = rawInput ? `Hasil Pencarian` : 'Klarifikasi Terkini';
+    tampilkanBerita(gabungan, !FACTCHECK_PROXY_URL && !DEV_ONLY_API_KEY);
+  } finally {
+    submitBtn.textContent = 'CEK FAKTA SEKARANG';
+    submitBtn.disabled = false;
+  }
 }
 
 const stampLabel = { hoax:'HOAKS', benar:'VALID', periksa:'KELIRU / PERIKSA', netral:'BELUM JELAS' };
