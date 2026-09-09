@@ -133,6 +133,26 @@
   }
   .status-line{ font-size:12px; margin-top:12px; min-height:14px; color:var(--ink-soft); }
   .status-line.active{ color:var(--blue); font-weight: 500; }
+
+  .history-bar{
+    display:flex; gap:8px; flex-wrap:wrap;
+    margin-top:12px; align-items:center;
+  }
+  .history-chip{
+    font-size:11px; padding:5px 10px; border-radius:14px;
+    border:1px solid var(--rule); background:var(--paper-card);
+    color:var(--ink-soft); cursor:pointer; font-family:'IBM Plex Mono',monospace;
+  }
+  .history-chip:hover{ border-color:var(--blue); color:var(--blue); }
+  .history-clear{ font-size:10px; color:var(--red); cursor:pointer; text-decoration:underline; }
+  .btn-share{
+    font-size:11px; font-weight:600; text-transform:uppercase;
+    color:var(--green); border:1px solid var(--green);
+    padding:8px 12px; border-radius:4px; background:transparent; cursor:pointer;
+    margin-right:8px;
+  }
+  .btn-share:hover{ background:var(--green); color:#FFF; }
+
   .sources-container { display: flex; flex-direction: column; gap: 16px; margin: 0 0 40px; }
   .source-group { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   .source-group-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--ink-soft); width: 100px; }
@@ -157,6 +177,23 @@
   .section-head .line{ height:2px; background:var(--ink); flex-grow:1; opacity: 0.1; }
   #news-container{ display:grid; grid-template-columns:1fr; gap:24px; padding-bottom:70px; }
   @media(min-width:720px){ #news-container{ grid-template-columns:1fr 1fr; } }
+
+  .card-thumb.skeleton, .skeleton-line{
+    background: linear-gradient(90deg, var(--paper-edge) 25%, #f2ecd e0 37%, var(--paper-edge) 63%);
+    background-size: 400% 100%;
+    animation: shimmer 1.4s ease infinite;
+  }
+  @keyframes shimmer{
+    0%{ background-position: 100% 50%; }
+    100%{ background-position: 0 50%; }
+  }
+  .skeleton-line{ height:12px; border-radius:4px; margin-bottom:8px; }
+  .skeleton-card{
+    background:var(--paper-card); border:1px solid var(--ink); border-radius:6px;
+    overflow:hidden; box-shadow:4px 4px 0 rgba(34,29,21,0.08);
+  }
+  .skeleton-card .card-content{ padding:18px; }
+
   .card{ 
     display: flex; flex-direction: column;
     background:var(--paper-card); 
@@ -203,6 +240,7 @@
     border:1px solid var(--blue); padding:8px 14px; border-radius: 4px; transition:.15s;
   }
   .card .foot a:hover{ background:var(--blue); color:var(--paper-card); }
+  .card .foot-actions{ display:flex; align-items:center; }
   .empty{ grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--ink-soft); font-size:14px; }
   .empty.warn{ color:var(--red); }
   footer{ border-top:3px solid var(--ink); padding:36px 20px; }
@@ -211,6 +249,23 @@
   .colophon .name{ font-family:'Fraunces',serif; font-weight:800; font-size:17px; }
   .colophon .role{ font-size:11px; color:var(--ink-soft); margin-top:2px; }
   .colophon .copy{ font-size:9px; color:var(--ink-soft); margin-top:12px; border-top:1px solid var(--rule); padding-top:10px; }
+
+  body.dark{
+    --paper:#1B1913;
+    --paper-card:#26231A;
+    --paper-edge:#332F22;
+    --ink:#EFE7D6;
+    --ink-soft:#B7AF97;
+    --rule:rgba(239,231,214,0.18);
+  }
+  body.dark{ background-image: radial-gradient(circle at 1px 1px, rgba(239,231,214,0.03) 1px, transparent 0); }
+  .theme-toggle{
+    font-size:11px; text-transform:uppercase; letter-spacing:0.08em;
+    border:1px solid var(--ink); background:transparent; color:var(--ink);
+    padding:6px 10px; border-radius:4px; cursor:pointer; margin-left:10px;
+  }
+  .theme-toggle:hover{ background:var(--ink); color:var(--paper); }
+  .masthead-right{ display:flex; align-items:center; }
 </style>
 </head>
 <body>
@@ -220,7 +275,10 @@
     <span class="brand-tab mono">Berkas Digital No. 26613</span><br>
     <span class="brand-name">FAKTAKLIK</span>
   </div>
-  <div class="status-live"><span id="liveDot" class="dot"></span><span id="liveLabel">Live</span></div>
+  <div class="masthead-right">
+    <div class="status-live"><span id="liveDot" class="dot"></span><span id="liveLabel">Live</span></div>
+    <button id="themeToggle" class="theme-toggle mono">🌙 Gelap</button>
+  </div>
 </header>
 
 <main>
@@ -237,6 +295,7 @@
       <div class="input-hint mono">Tekan Enter atau klik tombol di bawah untuk mencari</div>
       <button id="submitBtn" class="btn-submit">CEK FAKTA SEKARANG</button>
       <div id="statusLine" class="status-line mono"></div>
+      <div id="historyBar" class="history-bar"></div>
     </div>
 
     <div class="sources-container">
@@ -288,6 +347,7 @@ const statusLine = document.getElementById('statusLine');
 const charCount = document.getElementById('charCount');
 const liveDot = document.getElementById('liveDot');
 const liveLabel = document.getElementById('liveLabel');
+const themeToggle = document.getElementById('themeToggle');
 
 const pipaRSS = ['https://turnbackhoax.id/feed'];
 const DEFAULT_QUERIES = ['vaksin', 'pemilu', 'bansos', 'gempa'];
@@ -316,8 +376,6 @@ async function ambilJudulTikTok(link){
   }
 }
 
-// Perbaikan: cek beberapa kemungkinan sumber gambar dari RSS2JSON,
-// bukan cuma parsing tag <img> dari description (yang sering sudah di-strip).
 function ekstrakGambar(item) {
   if (item.thumbnail && item.thumbnail.trim() !== '') return item.thumbnail;
   if (item.enclosure && item.enclosure.link) return item.enclosure.link;
@@ -416,12 +474,30 @@ async function ambilDataFactCheckDefault(){
   }
 }
 
-// Perbaikan: guard di awal fungsi biar gak double-trigger kalau
-// user spam Enter/klik sebelum request sebelumnya selesai.
+function tampilkanSkeleton(jumlah=4){
+  container.innerHTML = '';
+  for(let i=0;i<jumlah;i++){
+    const div = document.createElement('div');
+    div.className = 'skeleton-card';
+    div.innerHTML = `
+      <div class="card-thumb skeleton"></div>
+      <div class="card-content">
+        <div class="skeleton-line" style="width:40%"></div>
+        <div class="skeleton-line" style="width:90%;height:18px;margin-top:6px;"></div>
+        <div class="skeleton-line" style="width:100%"></div>
+        <div class="skeleton-line" style="width:75%"></div>
+      </div>
+    `;
+    container.appendChild(div);
+  }
+}
+
 async function muatSemuaData(rawInput){
   if(submitBtn.disabled) return;
 
-  container.innerHTML = `<div class="empty">Menelusuri seluruh jaringan konsorsium...</div>`;
+  simpanHistory(rawInput);
+
+  tampilkanSkeleton();
   submitBtn.textContent = 'MEMPROSES...';
   submitBtn.disabled = true;
 
@@ -466,6 +542,10 @@ function escapeHTML(str){
   return div.innerHTML;
 }
 
+function escapeAttr(str){
+  return (str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
 function tampilkanBerita(items, belumDikonfigurasi){
   container.innerHTML = '';
 
@@ -504,13 +584,80 @@ function tampilkanBerita(items, belumDikonfigurasi){
 
         <div class="foot">
           <span class="mono">✓ Divalidasi</span>
-          <a href="${escapeHTML(item.link)}" target="_blank" rel="noopener noreferrer">Buka Bukti →</a>
+          <div class="foot-actions">
+            <button class="btn-share" onclick="shareWA('${escapeAttr(item.judul)}','${escapeAttr(item.link)}','${item.rating}')">Share</button>
+            <a href="${escapeHTML(item.link)}" target="_blank" rel="noopener noreferrer">Buka Bukti →</a>
+          </div>
         </div>
       </div>
     `;
     container.appendChild(div);
   });
 }
+
+// ===== Riwayat Pencarian =====
+const HISTORY_KEY = 'faktaklik_history';
+const MAX_HISTORY = 8;
+
+function ambilHistory(){
+  try{ return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; }
+  catch(e){ return []; }
+}
+
+function simpanHistory(query){
+  if(!query || query.trim().length === 0) return;
+  let history = ambilHistory();
+  history = history.filter(h => h.toLowerCase() !== query.toLowerCase());
+  history.unshift(query.trim());
+  if(history.length > MAX_HISTORY) history = history.slice(0, MAX_HISTORY);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+  tampilkanHistory();
+}
+
+function hapusHistory(){
+  localStorage.removeItem(HISTORY_KEY);
+  tampilkanHistory();
+}
+
+function tampilkanHistory(){
+  const history = ambilHistory();
+  const bar = document.getElementById('historyBar');
+  if(history.length === 0){ bar.innerHTML = ''; return; }
+
+  bar.innerHTML = history.map(h =>
+    `<span class="history-chip" onclick="jalankanDariHistory('${escapeAttr(h)}')">${escapeHTML(h.length > 25 ? h.substring(0,25)+'…' : h)}</span>`
+  ).join('') + `<span class="history-clear" onclick="hapusHistory()">Hapus riwayat</span>`;
+}
+
+function jalankanDariHistory(query){
+  searchInput.value = query;
+  muatSemuaData(query);
+}
+
+// ===== Share ke WhatsApp =====
+function shareWA(judul, link, rating){
+  const label = stampLabel[rating] || 'BELUM JELAS';
+  const teks = `*Cek Fakta - FaktaKlik*\n\nStatus: ${label}\n"${judul}"\n\nSumber: ${link}\n\nCek klaim viral lain di FaktaKlik sebelum kamu sharing! 🔍`;
+  const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(teks)}`;
+  window.open(url, '_blank');
+}
+
+// ===== Dark Mode =====
+const THEME_KEY = 'faktaklik_theme';
+
+function terapkanTheme(theme){
+  document.body.classList.toggle('dark', theme === 'dark');
+  themeToggle.textContent = theme === 'dark' ? '☀️ Terang' : '🌙 Gelap';
+}
+
+function toggleTheme(){
+  const isDark = document.body.classList.contains('dark');
+  const baru = isDark ? 'light' : 'dark';
+  localStorage.setItem(THEME_KEY, baru);
+  terapkanTheme(baru);
+}
+
+themeToggle.addEventListener('click', toggleTheme);
 
 submitBtn.addEventListener('click', () => {
   muatSemuaData(searchInput.value);
@@ -526,6 +673,8 @@ searchInput.addEventListener('input', (e)=>{
   charCount.textContent = `${e.target.value.length}/200`;
 });
 
+terapkanTheme(localStorage.getItem(THEME_KEY) || 'light');
+tampilkanHistory();
 muatSemuaData('');
 </script>
 </body>
