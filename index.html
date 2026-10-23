@@ -69,18 +69,21 @@
     100%{box-shadow:0 0 0 0 rgba(30,122,52,0);}
   }
   .navbar{
-    background:var(--red);
-    padding:0 20px;
+    background:#121212;
+    padding:0 16px;
     display:flex;
-    gap:22px;
+    gap:24px;
     overflow-x:auto;
+    scrollbar-width:none;
   }
-  .navbar span{
-    color:#fff; font-size:13px; font-weight:700; text-transform:uppercase;
-    padding:12px 0; white-space:nowrap; letter-spacing:0.02em; opacity:0.92;
-    border-bottom:3px solid transparent;
+  .navbar::-webkit-scrollbar{ display:none; }
+  .nav-item{
+    background:none; border:none; border-bottom:3px solid transparent;
+    color:#fff; font-family:'Inter',sans-serif; font-size:14px; font-weight:600;
+    padding:12px 0; white-space:nowrap; cursor:pointer; opacity:0.78;
   }
-  .navbar span.active{ opacity:1; border-bottom-color:#fff; }
+  .nav-item:hover{ opacity:1; }
+  .nav-item.active{ opacity:1; border-bottom-color:var(--red); }
 
   main{ max-width:900px; margin:0 auto; padding:0 20px; }
   .hero{ padding:32px 0 22px; text-align:left; border-bottom:1px solid var(--border); }
@@ -152,13 +155,6 @@
   }
   .history-chip:hover{ border-color:var(--blue); color:var(--blue); }
   .history-clear{ font-size:10px; color:var(--red); cursor:pointer; text-decoration:underline; }
-  .btn-share{
-    font-size:11px; font-weight:700; text-transform:uppercase;
-    color:var(--green); border:1px solid var(--green);
-    padding:8px 12px; border-radius:3px; background:transparent; cursor:pointer;
-    margin-right:8px;
-  }
-  .btn-share:hover{ background:var(--green); color:#FFF; }
 
   .sources-container { display: flex; flex-direction: column; gap: 14px; margin: 0 0 36px; }
   .source-group { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
@@ -176,8 +172,8 @@
   .section-head{ display:flex; align-items:center; gap:12px; margin:28px 0 20px; }
   .section-head span{ font-family:'Merriweather',serif; font-size:19px; font-weight:900; color:var(--ink); white-space:nowrap; }
   .section-head .line{ height:3px; background:var(--red); flex-grow:1; }
-  #news-container{ display:grid; grid-template-columns:1fr; gap:20px; padding-bottom:60px; }
-  @media(min-width:720px){ #news-container{ grid-template-columns:1fr 1fr; } }
+  #news-container{ display:grid; grid-template-columns:1fr; gap:28px; padding-bottom:60px; }
+  @media(min-width:720px){ #news-container{ grid-template-columns:1fr 1fr; gap:32px 28px; } }
 
   .card-thumb.skeleton, .skeleton-line{
     background: linear-gradient(90deg, #ECECEC 25%, #F7F7F7 37%, #ECECEC 63%);
@@ -186,52 +182,43 @@
   }
   @keyframes shimmer{ 0%{ background-position: 100% 50%; } 100%{ background-position: 0 50%; } }
   .skeleton-line{ height:12px; border-radius:3px; margin-bottom:8px; }
-  .skeleton-card{ background:var(--card); border:1px solid var(--border); border-radius:2px; overflow:hidden; }
-  .skeleton-card .card-content{ padding:16px; }
+  .skeleton-card{ background:transparent; }
+  .skeleton-card .card-content{ padding:12px 0 0; }
 
-  .card{ 
+  .card{
     display: flex; flex-direction: column;
-    background:var(--card); 
-    border:1px solid var(--border); 
-    border-radius: 2px;
-    overflow: hidden;
-    transition: box-shadow 0.2s;
+    background:transparent;
   }
-  .card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+  .card:hover h3{ text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:4px; }
   .card-thumb {
-    width: 100%; height: 160px;
+    width: 100%; aspect-ratio: 16 / 9; height: auto;
     background-color: #EAEAEA;
     background-size: cover; background-position: center;
-    border-bottom: 1px solid var(--border);
   }
   .card-thumb.placeholder {
     display: flex; align-items: center; justify-content: center;
     color: var(--ink-soft); opacity: 0.4; font-size: 24px;
-    height: auto; padding: 10px 0;
   }
-  .card-content { padding: 16px; display: flex; flex-direction: column; flex-grow: 1; }
-  .badge-container { display: flex; gap: 8px; margin-bottom: 10px; }
-  .pill {
-    padding: 3px 9px; border-radius: 2px;
-    font-size: 10px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase;
+  .card-content { padding: 12px 0 0; display: flex; flex-direction: column; flex-grow: 1; }
+  .kicker{ font-size:12px; font-weight:700; margin-bottom:6px; }
+  .kicker.hoax{ color:var(--red); }
+  .kicker.benar{ color:var(--green); }
+  .kicker.periksa{ color:var(--amber); }
+  .kicker.netral{ color:var(--grey); }
+  .card .meta{ font-size:12px; color:var(--ink-soft); margin-bottom:10px; }
+  .card .meta .src{ font-weight:700; color:var(--ink); }
+  .card h3{ font-family:'Merriweather',serif; font-weight:700; font-size:18px; line-height:1.35; margin:0 0 8px; }
+  .card p{ font-size:14px; color:var(--ink-soft); line-height:1.6; margin:0 0 12px; flex-grow: 1; }
+  .card .foot{ display:flex; justify-content:space-between; align-items:center; font-size:12px; margin-top:auto; }
+  .card .foot > span{ color:var(--ink-soft); }
+  .card .foot-actions{ display:flex; align-items:center; gap:16px; }
+  .card .foot a{ font-size:12px; font-weight:700; color:var(--blue); text-decoration:none; }
+  .card .foot a:hover{ text-decoration:underline; }
+  .btn-share{
+    font-family:'Inter',sans-serif; font-size:12px; font-weight:700;
+    color:var(--green); background:none; border:none; padding:0; cursor:pointer;
   }
-  .pill.hoax { background-color: var(--red); color: #FFF; }
-  .pill.benar { background-color: var(--green); color: #FFF; }
-  .pill.periksa { background-color: var(--amber); color: #FFF; }
-  .pill.netral { background-color: var(--grey); color: #FFF; }
-  .card .meta{ font-size:11px; color:#888; margin-bottom:8px; display: flex; justify-content: space-between; }
-  .card .meta .src{ font-weight:700; color:var(--blue); text-transform:uppercase; font-size:10px; }
-  .card h3{ font-family:'Merriweather',serif; font-weight:700; font-size:17px; line-height:1.35; margin:0 0 10px; }
-  .card p{ font-size:13px; color:var(--ink-soft); line-height:1.55; margin:0 0 18px; flex-grow: 1; }
-  .card .foot{ display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:14px; margin-top: auto; }
-  .card .foot span { font-size: 10px; color: #999; }
-  .card .foot a{
-    font-size:11px; font-weight: 700; text-transform:uppercase; letter-spacing:0.04em;
-    color:var(--blue); text-decoration:none; 
-    border:1px solid var(--blue); padding:7px 12px; border-radius: 3px; transition:.15s;
-  }
-  .card .foot a:hover{ background:var(--blue); color:#fff; }
-  .card .foot-actions{ display:flex; align-items:center; }
+  .btn-share:hover{ text-decoration:underline; }
   .empty{ grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--ink-soft); font-size:14px; }
   .empty.warn{ color:var(--red); }
 
@@ -270,11 +257,10 @@
 </header>
 
 <nav class="navbar">
-  <span class="active">Klarifikasi Terkini</span>
-  <span>Vaksin</span>
-  <span>Pemilu</span>
-  <span>Bansos</span>
-  <span>Bencana</span>
+  <button class="nav-item active" data-kategori="Populer">Populer</button>
+  <button class="nav-item" data-kategori="News">News</button>
+  <button class="nav-item" data-kategori="Kolom">Kolom</button>
+  <button class="nav-item" data-kategori="Event">Event</button>
 </nav>
 
 <main>
@@ -312,7 +298,7 @@
   
   <section>
     <div class="section-head">
-      <span id="section-label">Klarifikasi Terkini</span>
+      <span id="section-label">Populer</span>
       <div class="line"></div>
     </div>
     <div id="news-container">
@@ -342,9 +328,18 @@ const charCount = document.getElementById('charCount');
 const liveDot = document.getElementById('liveDot');
 const liveLabel = document.getElementById('liveLabel');
 const themeToggle = document.getElementById('themeToggle');
+const navbar = document.querySelector('.navbar');
 
 const pipaRSS = ['https://turnbackhoax.id/feed'];
 const DEFAULT_QUERIES = ['vaksin', 'pemilu', 'bansos', 'gempa'];
+
+// Isi tiap tab belum ditentukan. Sementara semua tab memakai feed default.
+const KATEGORI = {
+  'Populer': '',
+  'News': '',
+  'Kolom': '',
+  'Event': ''
+};
 
 function setLiveStatus(ok, label){
   liveDot.classList.toggle('err', !ok);
@@ -486,17 +481,22 @@ function tampilkanSkeleton(jumlah=4){
   }
 }
 
-async function muatSemuaData(rawInput){
+function setNavAktif(nama){
+  navbar.querySelectorAll('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.kategori === nama));
+}
+
+async function muatSemuaData(rawInput, kategori = 'Populer'){
   if(submitBtn.disabled) return;
 
   simpanHistory(rawInput);
+  setNavAktif(rawInput ? null : kategori);
 
   tampilkanSkeleton();
   submitBtn.textContent = 'Memproses...';
   submitBtn.disabled = true;
 
   try{
-    let query = rawInput;
+    let query = rawInput || KATEGORI[kategori] || '';
     if(rawInput && isTikTokLink(rawInput)){
       query = await ambilJudulTikTok(rawInput);
     } else {
@@ -520,7 +520,7 @@ async function muatSemuaData(rawInput){
     }
 
     const gabungan = [...dataFC, ...dataRSS];
-    sectionLabel.textContent = rawInput ? `Hasil Pencarian` : 'Klarifikasi Terkini';
+    sectionLabel.textContent = rawInput ? 'Hasil Pencarian' : kategori;
     tampilkanBerita(gabungan, !FACTCHECK_PROXY_URL && !DEV_ONLY_API_KEY);
   } finally {
     submitBtn.textContent = 'Cek Fakta Sekarang';
@@ -528,7 +528,7 @@ async function muatSemuaData(rawInput){
   }
 }
 
-const stampLabel = { hoax:'HOAKS', benar:'VALID', periksa:'KELIRU / PERIKSA', netral:'BELUM JELAS' };
+const stampLabel = { hoax:'Hoaks', benar:'Valid', periksa:'Keliru / perlu dicermati', netral:'Belum jelas' };
 
 function escapeHTML(str){
   const div = document.createElement('div');
@@ -565,9 +565,7 @@ function tampilkanBerita(items, belumDikonfigurasi){
     div.innerHTML = `
       ${thumbHTML}
       <div class="card-content">
-        <div class="badge-container">
-          <span class="pill ${item.rating}">${stampLabel[item.rating]}</span>
-        </div>
+        <div class="kicker ${item.rating}">${stampLabel[item.rating]}</div>
         <h3>${escapeHTML(item.judul)}</h3>
         <p>${escapeHTML(item.deskripsi)}</p>
         
@@ -579,8 +577,8 @@ function tampilkanBerita(items, belumDikonfigurasi){
         <div class="foot">
           <span>✓ Divalidasi</span>
           <div class="foot-actions">
-            <button class="btn-share" onclick="shareWA('${escapeAttr(item.judul)}','${escapeAttr(item.link)}','${item.rating}')">Share</button>
-            <a href="${escapeHTML(item.link)}" target="_blank" rel="noopener noreferrer">Buka Bukti →</a>
+            <button class="btn-share" onclick="shareWA('${escapeAttr(item.judul)}','${escapeAttr(item.link)}','${item.rating}')">Bagikan</button>
+            <a href="${escapeHTML(item.link)}" target="_blank" rel="noopener noreferrer">Buka bukti</a>
           </div>
         </div>
       </div>
@@ -628,7 +626,7 @@ function jalankanDariHistory(query){
 }
 
 function shareWA(judul, link, rating){
-  const label = stampLabel[rating] || 'BELUM JELAS';
+  const label = stampLabel[rating] || 'Belum jelas';
   const teks = `*Cek Fakta - FaktaKlik*\n\nStatus: ${label}\n"${judul}"\n\nSumber: ${link}\n\nCek klaim viral lain di FaktaKlik sebelum kamu sharing! 🔍`;
   const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(teks)}`;
   window.open(url, '_blank');
@@ -649,6 +647,14 @@ function toggleTheme(){
 }
 
 themeToggle.addEventListener('click', toggleTheme);
+
+navbar.addEventListener('click', (e) => {
+  const btn = e.target.closest('.nav-item');
+  if(!btn) return;
+  searchInput.value = '';
+  charCount.textContent = '0/200';
+  muatSemuaData('', btn.dataset.kategori);
+});
 
 submitBtn.addEventListener('click', () => {
   muatSemuaData(searchInput.value);
